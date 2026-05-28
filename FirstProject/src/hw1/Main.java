@@ -308,86 +308,108 @@ public class Main {
 	private static void addCustomer(Scanner scanner, DeliverySystem system) {
 		System.out.println("Add Customer");
 
-		System.out.print("Enter customer code (e.g. C11): ");
-		String code = scanner.nextLine();
-		if (!isNonEmpty(code)) {
-			System.out.println("Error: Customer code cannot be empty.");
-			return;
-		}
-		if (system.findCustomerById(code) != null) {
-			System.out.println("Error: A customer with this code already exists.");
-			return;
+		String code;
+		while (true) {
+			System.out.print("Enter customer code (e.g. C11): ");
+			code = scanner.nextLine();
+			if (!isNonEmpty(code)) {
+				System.out.println("Error: Customer code cannot be empty.");
+			} else if (Character.toUpperCase(code.charAt(0)) != 'C') {
+				System.out.println("Error: Customer code must start with the letter 'C' (e.g. C11).");
+			} else if (system.findCustomerById(code) != null) {
+				System.out.println("Error: A customer with this code already exists.");
+			} else {
+				break;
+			}
 		}
 
 		// First name - letters only, no digits
-		System.out.print("Enter first name (letters only): ");
-		String firstName = scanner.nextLine();
-		if (!isLettersOnly(firstName)) {
+		String firstName;
+		while (true) {
+			System.out.print("Enter first name (letters only): ");
+			firstName = scanner.nextLine();
+			if (isLettersOnly(firstName))
+				break;
 			System.out.println("Error: First name must contain letters only, no digits or special characters.");
-			return;
 		}
 
 		// Last name - letters and spaces allowed (compound names)
-		System.out.print("Enter last name (letters only, spaces allowed): ");
-		String lastName = scanner.nextLine();
-		if (!isLettersAndSpaces(lastName)) {
+		String lastName;
+		while (true) {
+			System.out.print("Enter last name (letters only, spaces allowed): ");
+			lastName = scanner.nextLine();
+			if (isLettersAndSpaces(lastName))
+				break;
 			System.out.println("Error: Last name must contain letters only.");
-			return;
 		}
 
 		// City - letters and spaces only
-		System.out.print("Enter city (letters only): ");
-		String city = scanner.nextLine();
-		if (!isLettersAndSpaces(city)) {
+		String city;
+		while (true) {
+			System.out.print("Enter city (letters only): ");
+			city = scanner.nextLine();
+			if (isLettersAndSpaces(city))
+				break;
 			System.out.println("Error: City must contain letters only.");
-			return;
 		}
 
 		// Street - letters, numbers and spaces allowed
-		System.out.print("Enter street address (e.g. Herzl 10): ");
-		String street = scanner.nextLine();
-		if (!isNonEmpty(street)) {
+		String street;
+		while (true) {
+			System.out.print("Enter street address (e.g. Herzl 10): ");
+			street = scanner.nextLine();
+			if (isNonEmpty(street))
+				break;
 			System.out.println("Error: Street address cannot be empty.");
-			return;
 		}
 
 		// Zipcode - digits only, 5-7 digits
-		System.out.print("Enter zipcode (5-7 digits): ");
-		String zipcode = scanner.nextLine();
-		if (!isValidZipcode(zipcode)) {
+		String zipcode;
+		while (true) {
+			System.out.print("Enter zipcode (5-7 digits): ");
+			zipcode = scanner.nextLine();
+			if (isValidZipcode(zipcode))
+				break;
 			System.out.println("Error: Zipcode must be 5-7 digits only.");
-			return;
 		}
 
 		// Phone - 10 digits, dash after 3rd digit optional
-		System.out.print("Enter phone (e.g. 0501234567 or 050-1234567): ");
-		String phone = scanner.nextLine();
-		if (!isValidPhone(phone)) {
+		String phone;
+		while (true) {
+			System.out.print("Enter phone (e.g. 0501234567 or 050-1234567): ");
+			phone = scanner.nextLine();
+			if (isValidPhone(phone))
+				break;
 			System.out.println("Error: Phone must be 10 digits (e.g. 0501234567 or 050-1234567).");
-			return;
 		}
 
 		// Email validation
-		System.out.print("Enter email: ");
-		String email = scanner.nextLine();
-		if (!isValidEmail(email)) {
+		String email;
+		while (true) {
+			System.out.print("Enter email: ");
+			email = scanner.nextLine();
+			if (isValidEmail(email))
+				break;
 			System.out.println(
 					"Error: Invalid email. Must contain exactly one '@', a dot after '@', not at start or end.");
-			return;
 		}
 
 		// Credit balance - non-negative double
-		System.out.print("Enter credit balance (e.g. 0.0): ");
-		if (!scanner.hasNextDouble()) {
-			System.out.println("Error: Credit balance must be a number.");
+		double creditBalance;
+		while (true) {
+			System.out.print("Enter credit balance (e.g. 0.0): ");
+			if (!scanner.hasNextDouble()) {
+				System.out.println("Error: Credit balance must be a number.");
+				scanner.nextLine();
+				continue;
+			}
+			creditBalance = scanner.nextDouble();
 			scanner.nextLine();
-			return;
-		}
-		double creditBalance = scanner.nextDouble();
-		scanner.nextLine();
-		if (creditBalance < 0) {
-			System.out.println("Error: Credit balance cannot be negative.");
-			return;
+			if (creditBalance < 0) {
+				System.out.println("Error: Credit balance cannot be negative.");
+			} else {
+				break;
+			}
 		}
 
 		Customer newCustomer = new Customer(code, firstName, lastName, city, street, zipcode, phone, email,
@@ -404,29 +426,35 @@ public class Main {
 	private static void addRestAdmin(Scanner scanner, DeliverySystem system) {
 		System.out.println(" Add Restaurant Manager");
 
-		System.out.print("Enter manager full name: ");
-		String name = scanner.nextLine();
-		if (!isNonEmpty(name)) {
+		String name;
+		while (true) {
+			System.out.print("Enter manager full name: ");
+			name = scanner.nextLine();
+			if (isNonEmpty(name))
+				break;
 			System.out.println("Error: Name cannot be empty.");
-			return;
 		}
 
-		System.out.print("Enter username: ");
-		String username = scanner.nextLine();
-		if (!isNonEmpty(username)) {
-			System.out.println("Error: Username cannot be empty.");
-			return;
-		}
-		if (system.findRestAdminByUsername(username) != null) {
-			System.out.println("Error: A manager with this username already exists.");
-			return;
+		String username;
+		while (true) {
+			System.out.print("Enter username: ");
+			username = scanner.nextLine();
+			if (!isNonEmpty(username)) {
+				System.out.println("Error: Username cannot be empty.");
+			} else if (system.findRestAdminByUsername(username) != null) {
+				System.out.println("Error: A manager with this username already exists.");
+			} else {
+				break;
+			}
 		}
 
-		System.out.print("Enter password: ");
-		String password = scanner.nextLine();
-		if (!isNonEmpty(password)) {
+		String password;
+		while (true) {
+			System.out.print("Enter password: ");
+			password = scanner.nextLine();
+			if (isNonEmpty(password))
+				break;
 			System.out.println("Error: Password cannot be empty.");
-			return;
 		}
 
 		RestAdmin newAdmin = new RestAdmin(name, username, password, new Restaurant[50], 0);
@@ -442,28 +470,38 @@ public class Main {
 	private static void assignManagerToRestaurant(Scanner scanner, DeliverySystem system) {
 		System.out.println("Assign Manager to Restaurant");
 
-		System.out.print("Enter manager username: ");
-		String username = scanner.nextLine();
-		if (!isNonEmpty(username)) {
-			System.out.println("Error: Username cannot be empty.");
-			return;
-		}
-		RestAdmin admin = system.findRestAdminByUsername(username);
-		if (admin == null) {
-			System.out.println("Error: Manager not found.");
-			return;
+		String username;
+		RestAdmin admin;
+		while (true) {
+			System.out.print("Enter manager username: ");
+			username = scanner.nextLine();
+			if (!isNonEmpty(username)) {
+				System.out.println("Error: Username cannot be empty.");
+				continue;
+			}
+			admin = system.findRestAdminByUsername(username);
+			if (admin == null) {
+				System.out.println("Error: Manager not found.");
+			} else {
+				break;
+			}
 		}
 
-		System.out.print("Enter restaurant code: ");
-		String restCode = scanner.nextLine();
-		if (!isNonEmpty(restCode)) {
-			System.out.println("Error: Restaurant code cannot be empty.");
-			return;
-		}
-		Restaurant restaurant = system.findRestaurantById(restCode);
-		if (restaurant == null) {
-			System.out.println("Error: Restaurant not found.");
-			return;
+		String restCode;
+		Restaurant restaurant;
+		while (true) {
+			System.out.print("Enter restaurant code: ");
+			restCode = scanner.nextLine();
+			if (!isNonEmpty(restCode)) {
+				System.out.println("Error: Restaurant code cannot be empty.");
+				continue;
+			}
+			restaurant = system.findRestaurantById(restCode);
+			if (restaurant == null) {
+				System.out.println("Error: Restaurant not found.");
+			} else {
+				break;
+			}
 		}
 
 		boolean assigned = admin.addRestaurant(restaurant);
@@ -478,75 +516,97 @@ public class Main {
 	// Adds a new restaurant to the system
 	private static void addRestaurant(Scanner scanner, DeliverySystem system) {
 		System.out.println("Add Restaurant");
-		System.out.println("Choose restaurant type:");
-		System.out.println("1. Regular Restaurant");
-		System.out.println("2. Fast Food Restaurant");
-		System.out.println("3. Premium Restaurant");
-		System.out.print("Select: ");
-		String typeChoice = scanner.nextLine();
-
-		if (!typeChoice.equals("1") && !typeChoice.equals("2") && !typeChoice.equals("3")) {
+		String typeChoice;
+		while (true) {
+			System.out.println("Choose restaurant type:");
+			System.out.println("1. Regular Restaurant");
+			System.out.println("2. Fast Food Restaurant");
+			System.out.println("3. Premium Restaurant");
+			System.out.print("Select: ");
+			typeChoice = scanner.nextLine();
+			if (typeChoice.equals("1") || typeChoice.equals("2") || typeChoice.equals("3"))
+				break;
 			System.out.println("Error: Invalid selection. Please choose 1, 2, or 3.");
-			return;
 		}
 
-		System.out.print("Enter restaurant code (e.g. R11): ");
-		String code = scanner.nextLine();
-		if (!isNonEmpty(code)) {
-			System.out.println("Error: Code cannot be empty.");
-			return;
-		}
-		if (system.findRestaurantById(code) != null) {
-			System.out.println("Error: A restaurant with this code already exists.");
-			return;
+		String code;
+		while (true) {
+			System.out.print("Enter restaurant code (e.g. R11): ");
+			code = scanner.nextLine();
+			if (!isNonEmpty(code)) {
+				System.out.println("Error: Code cannot be empty.");
+			} else if (system.findRestaurantById(code) != null) {
+				System.out.println("Error: A restaurant with this code already exists.");
+			} else {
+				break;
+			}
 		}
 
-		System.out.print("Enter restaurant name: ");
-		String name = scanner.nextLine();
-		if (!isNonEmpty(name)) {
+		String name;
+		while (true) {
+			System.out.print("Enter restaurant name: ");
+			name = scanner.nextLine();
+			if (isNonEmpty(name))
+				break;
 			System.out.println("Error: Name cannot be empty.");
-			return;
 		}
 
-		System.out.print("Enter kitchen type (e.g. Italian, Asian): ");
-		String kitchenType = scanner.nextLine();
-		if (!isNonEmpty(kitchenType)) {
+		String kitchenType;
+		while (true) {
+			System.out.print("Enter kitchen type (e.g. Italian, Asian): ");
+			kitchenType = scanner.nextLine();
+			if (isNonEmpty(kitchenType))
+				break;
 			System.out.println("Error: Kitchen type cannot be empty.");
-			return;
 		}
 
-		System.out.print("Enter rating (0.0 - 5.0): ");
-		if (!scanner.hasNextDouble()) {
-			System.out.println("Error: Rating must be a number.");
+		double rating;
+		while (true) {
+			System.out.print("Enter rating (0.0 - 5.0): ");
+			if (!scanner.hasNextDouble()) {
+				System.out.println("Error: Rating must be a number.");
+				scanner.nextLine();
+				continue;
+			}
+			rating = scanner.nextDouble();
 			scanner.nextLine();
-			return;
-		}
-		double rating = scanner.nextDouble();
-		scanner.nextLine();
-		if (rating < 0 || rating > 5) {
-			System.out.println("Error: Rating must be between 0.0 and 5.0.");
-			return;
+			if (rating < 0 || rating > 5) {
+				System.out.println("Error: Rating must be between 0.0 and 5.0.");
+			} else {
+				break;
+			}
 		}
 
-		System.out.print("Is the restaurant open? (true/false): ");
-		String openStr = scanner.nextLine();
-		if (!openStr.equals("true") && !openStr.equals("false")) {
+		boolean isOpen;
+		while (true) {
+			System.out.print("Is the restaurant open? (true/false): ");
+			String openStr = scanner.nextLine();
+			if (openStr.equals("true")) {
+				isOpen = true;
+				break;
+			}
+			if (openStr.equals("false")) {
+				isOpen = false;
+				break;
+			}
 			System.out.println("Error: Please enter 'true' or 'false'.");
-			return;
 		}
-		boolean isOpen = openStr.equals("true");
 
-		System.out.print("Enter basic delivery fee: ");
-		if (!scanner.hasNextDouble()) {
-			System.out.println("Error: Delivery fee must be a number.");
+		double deliveryFee;
+		while (true) {
+			System.out.print("Enter basic delivery fee: ");
+			if (!scanner.hasNextDouble()) {
+				System.out.println("Error: Delivery fee must be a number.");
+				scanner.nextLine();
+				continue;
+			}
+			deliveryFee = scanner.nextDouble();
 			scanner.nextLine();
-			return;
-		}
-		double deliveryFee = scanner.nextDouble();
-		scanner.nextLine();
-		if (deliveryFee < 0) {
-			System.out.println("Error: Delivery fee cannot be negative.");
-			return;
+			if (deliveryFee < 0) {
+				System.out.println("Error: Delivery fee cannot be negative.");
+			} else {
+				break;
+			}
 		}
 
 		if (typeChoice.equals("1")) {
@@ -559,47 +619,59 @@ public class Main {
 			if (prepTime == -1)
 				return;
 
-			System.out.print("Enter fast delivery extra cost: ");
-			if (!scanner.hasNextDouble()) {
-				System.out.println("Error: Extra cost must be a number.");
+			double fastExtra;
+			while (true) {
+				System.out.print("Enter fast delivery extra cost: ");
+				if (!scanner.hasNextDouble()) {
+					System.out.println("Error: Extra cost must be a number.");
+					scanner.nextLine();
+					continue;
+				}
+				fastExtra = scanner.nextDouble();
 				scanner.nextLine();
-				return;
-			}
-			double fastExtra = scanner.nextDouble();
-			scanner.nextLine();
-			if (fastExtra < 0) {
-				System.out.println("Error: Extra cost cannot be negative.");
-				return;
+				if (fastExtra < 0) {
+					System.out.println("Error: Extra cost cannot be negative.");
+				} else {
+					break;
+				}
 			}
 			system.addRestaurant(
 					new FastFoodRestaurant(code, name, kitchenType, rating, isOpen, deliveryFee, prepTime, fastExtra));
 			System.out.println("Fast food restaurant added successfully! Code: " + code);
 
 		} else {
-			System.out.print("Enter minimum order cost: ");
-			if (!scanner.hasNextDouble()) {
-				System.out.println("Error: Minimum cost must be a number.");
+			double minCost;
+			while (true) {
+				System.out.print("Enter minimum order cost: ");
+				if (!scanner.hasNextDouble()) {
+					System.out.println("Error: Minimum cost must be a number.");
+					scanner.nextLine();
+					continue;
+				}
+				minCost = scanner.nextDouble();
 				scanner.nextLine();
-				return;
-			}
-			double minCost = scanner.nextDouble();
-			scanner.nextLine();
-			if (minCost < 0) {
-				System.out.println("Error: Minimum cost cannot be negative.");
-				return;
+				if (minCost < 0) {
+					System.out.println("Error: Minimum cost cannot be negative.");
+				} else {
+					break;
+				}
 			}
 
-			System.out.print("Enter extra commission percentage: ");
-			if (!scanner.hasNextDouble()) {
-				System.out.println("Error: Commission must be a number.");
+			double commission;
+			while (true) {
+				System.out.print("Enter extra commission percentage: ");
+				if (!scanner.hasNextDouble()) {
+					System.out.println("Error: Commission must be a number.");
+					scanner.nextLine();
+					continue;
+				}
+				commission = scanner.nextDouble();
 				scanner.nextLine();
-				return;
-			}
-			double commission = scanner.nextDouble();
-			scanner.nextLine();
-			if (commission < 0) {
-				System.out.println("Error: Commission cannot be negative.");
-				return;
+				if (commission < 0) {
+					System.out.println("Error: Commission cannot be negative.");
+				} else {
+					break;
+				}
 			}
 			system.addRestaurant(
 					new PremiumRestaurant(code, name, kitchenType, rating, isOpen, deliveryFee, minCost, commission));
@@ -611,36 +683,44 @@ public class Main {
 	private static void addRider(Scanner scanner, DeliverySystem system) {
 		System.out.println("Add Rider");
 
-		System.out.print("Enter rider ID number (exactly 9 digits): ");
-		String id = scanner.nextLine();
-		if (!isValidId(id)) {
-			System.out.println("Error: ID must be exactly 9 digits.");
-			return;
-		}
-		if (system.findRiderById(id) != null) {
-			System.out.println("Error: A rider with this ID already exists.");
-			return;
+		String id;
+		while (true) {
+			System.out.print("Enter rider ID number (exactly 9 digits): ");
+			id = scanner.nextLine();
+			if (!isValidId(id)) {
+				System.out.println("Error: ID must be exactly 9 digits.");
+			} else if (system.findRiderById(id) != null) {
+				System.out.println("Error: A rider with this ID already exists.");
+			} else {
+				break;
+			}
 		}
 
-		System.out.print("Enter full name: ");
-		String fullName = scanner.nextLine();
-		if (!isNonEmpty(fullName)) {
+		String fullName;
+		while (true) {
+			System.out.print("Enter full name: ");
+			fullName = scanner.nextLine();
+			if (isNonEmpty(fullName))
+				break;
 			System.out.println("Error: Name cannot be empty.");
-			return;
 		}
 
-		System.out.print("Enter phone (e.g. 0501234567 or 050-1234567): ");
-		String phone = scanner.nextLine();
-		if (!isValidPhone(phone)) {
+		String phone;
+		while (true) {
+			System.out.print("Enter phone (e.g. 0501234567 or 050-1234567): ");
+			phone = scanner.nextLine();
+			if (isValidPhone(phone))
+				break;
 			System.out.println("Error: Phone must be 10 digits (e.g. 0501234567 or 050-1234567).");
-			return;
 		}
 
-		System.out.print("Enter vehicle type (e.g. Bicycle, Scooter, Car): ");
-		String vehicle = scanner.nextLine();
-		if (!isNonEmpty(vehicle)) {
+		String vehicle;
+		while (true) {
+			System.out.print("Enter vehicle type (e.g. Bicycle, Scooter, Car): ");
+			vehicle = scanner.nextLine();
+			if (isNonEmpty(vehicle))
+				break;
 			System.out.println("Error: Vehicle type cannot be empty.");
-			return;
 		}
 
 		Rider newRider = new Rider(id, fullName, phone, vehicle, true, new Order[50], 0);
@@ -656,32 +736,40 @@ public class Main {
 	private static void assignRiderToOrder(Scanner scanner, DeliverySystem system) {
 		System.out.println("Assign Rider to Order");
 
-		System.out.print("Enter rider ID: ");
-		String riderId = scanner.nextLine();
-		if (!isNonEmpty(riderId)) {
-			System.out.println("Error: Rider ID cannot be empty.");
-			return;
-		}
-		Rider rider = system.findRiderById(riderId);
-		if (rider == null) {
-			System.out.println("Error: Rider not found.");
-			return;
-		}
-		if (!rider.isIsAvailable()) {
-			System.out.println("Error: Rider is not available.");
-			return;
+		String riderId;
+		Rider rider;
+		while (true) {
+			System.out.print("Enter rider ID: ");
+			riderId = scanner.nextLine();
+			if (!isNonEmpty(riderId)) {
+				System.out.println("Error: Rider ID cannot be empty.");
+				continue;
+			}
+			rider = system.findRiderById(riderId);
+			if (rider == null) {
+				System.out.println("Error: Rider not found.");
+			} else if (!rider.isIsAvailable()) {
+				System.out.println("Error: Rider is not available.");
+			} else {
+				break;
+			}
 		}
 
-		System.out.print("Enter order code: ");
-		String orderId = scanner.nextLine();
-		if (!isNonEmpty(orderId)) {
-			System.out.println("Error: Order code cannot be empty.");
-			return;
-		}
-		Order order = system.findOrderById(orderId);
-		if (order == null) {
-			System.out.println("Error: Order not found.");
-			return;
+		String orderId;
+		Order order;
+		while (true) {
+			System.out.print("Enter order code: ");
+			orderId = scanner.nextLine();
+			if (!isNonEmpty(orderId)) {
+				System.out.println("Error: Order code cannot be empty.");
+				continue;
+			}
+			order = system.findOrderById(orderId);
+			if (order == null) {
+				System.out.println("Error: Order not found.");
+			} else {
+				break;
+			}
 		}
 
 		order.setRiderId(riderId);
@@ -694,54 +782,62 @@ public class Main {
 	private static void addOrder(Scanner scanner, DeliverySystem system, RestAdmin restAdmin) {
 		System.out.println("Add Order");
 
-		System.out.print("Enter customer code: ");
-		String customerId = scanner.nextLine();
-		if (!isNonEmpty(customerId)) {
-			System.out.println("Error: Customer code cannot be empty.");
-			return;
-		}
-		if (system.findCustomerById(customerId) == null) {
-			System.out.println("Error: Customer not found in the system.");
-			return;
-		}
-
-		System.out.print("Enter restaurant code: ");
-		String restCode = scanner.nextLine();
-		if (!isNonEmpty(restCode)) {
-			System.out.println("Error: Restaurant code cannot be empty.");
-			return;
-		}
-		Restaurant restaurant = system.findRestaurantById(restCode);
-		if (restaurant == null) {
-			System.out.println("Error: Restaurant not found.");
-			return;
-		}
-		if (!restAdmin.managesRestaurant(restCode)) {
-			System.out.println("Error: You are not responsible for this restaurant.");
-			return;
-		}
-
-		System.out.print("Enter base order amount: ");
-		if (!scanner.hasNextDouble()) {
-			System.out.println("Error: Amount must be a number.");
-			scanner.nextLine();
-			return;
-		}
-		double baseAmount = scanner.nextDouble();
-		scanner.nextLine();
-		if (baseAmount <= 0) {
-			System.out.println("Error: Amount must be positive.");
-			return;
-		}
-
-		// Check minimum for premium restaurants
-		if (restaurant instanceof PremiumRestaurant) {
-			PremiumRestaurant pr = (PremiumRestaurant) restaurant;
-			if (baseAmount < pr.getMinOrderCost()) {
-				System.out.println("Error: Amount " + baseAmount + " is below the minimum of " + pr.getMinOrderCost()
-						+ " for this restaurant.");
-				return;
+		String customerId;
+		while (true) {
+			System.out.print("Enter customer code: ");
+			customerId = scanner.nextLine();
+			if (!isNonEmpty(customerId)) {
+				System.out.println("Error: Customer code cannot be empty.");
+			} else if (system.findCustomerById(customerId) == null) {
+				System.out.println("Error: Customer not found in the system.");
+			} else {
+				break;
 			}
+		}
+
+		String restCode;
+		Restaurant restaurant;
+		while (true) {
+			System.out.print("Enter restaurant code: ");
+			restCode = scanner.nextLine();
+			if (!isNonEmpty(restCode)) {
+				System.out.println("Error: Restaurant code cannot be empty.");
+				continue;
+			}
+			restaurant = system.findRestaurantById(restCode);
+			if (restaurant == null) {
+				System.out.println("Error: Restaurant not found.");
+			} else if (!restAdmin.managesRestaurant(restCode)) {
+				System.out.println("Error: You are not responsible for this restaurant.");
+			} else {
+				break;
+			}
+		}
+
+		double baseAmount;
+		while (true) {
+			System.out.print("Enter base order amount: ");
+			if (!scanner.hasNextDouble()) {
+				System.out.println("Error: Amount must be a number.");
+				scanner.nextLine();
+				continue;
+			}
+			baseAmount = scanner.nextDouble();
+			scanner.nextLine();
+			if (baseAmount <= 0) {
+				System.out.println("Error: Amount must be positive.");
+				continue;
+			}
+			// Check minimum for premium restaurants
+			if (restaurant instanceof PremiumRestaurant) {
+				PremiumRestaurant pr = (PremiumRestaurant) restaurant;
+				if (baseAmount < pr.getMinOrderCost()) {
+					System.out.println("Error: Amount " + baseAmount + " is below the minimum of "
+							+ pr.getMinOrderCost() + " for this restaurant.");
+					continue;
+				}
+			}
+			break;
 		}
 
 		// Order date
@@ -780,39 +876,47 @@ public class Main {
 	private static void placeOrder(Scanner scanner, DeliverySystem system, Customer customer) {
 		System.out.println("Place New Order");
 
-		System.out.print("Enter restaurant code: ");
-		String restCode = scanner.nextLine();
-		if (!isNonEmpty(restCode)) {
-			System.out.println("Error: Restaurant code cannot be empty.");
-			return;
-		}
-		Restaurant restaurant = system.findRestaurantById(restCode);
-		if (restaurant == null) {
-			System.out.println("Error: Restaurant not found.");
-			return;
-		}
-
-		System.out.print("Enter base order amount: ");
-		if (!scanner.hasNextDouble()) {
-			System.out.println("Error: Amount must be a number.");
-			scanner.nextLine();
-			return;
-		}
-		double baseAmount = scanner.nextDouble();
-		scanner.nextLine();
-		if (baseAmount <= 0) {
-			System.out.println("Error: Amount must be positive.");
-			return;
-		}
-
-		// Check minimum for premium restaurants
-		if (restaurant instanceof PremiumRestaurant) {
-			PremiumRestaurant pr = (PremiumRestaurant) restaurant;
-			if (baseAmount < pr.getMinOrderCost()) {
-				System.out.println("Error: Amount " + baseAmount + " is below the minimum of " + pr.getMinOrderCost()
-						+ " for this restaurant.");
-				return;
+		String restCode;
+		Restaurant restaurant;
+		while (true) {
+			System.out.print("Enter restaurant code: ");
+			restCode = scanner.nextLine();
+			if (!isNonEmpty(restCode)) {
+				System.out.println("Error: Restaurant code cannot be empty.");
+				continue;
 			}
+			restaurant = system.findRestaurantById(restCode);
+			if (restaurant == null) {
+				System.out.println("Error: Restaurant not found.");
+			} else {
+				break;
+			}
+		}
+
+		double baseAmount;
+		while (true) {
+			System.out.print("Enter base order amount: ");
+			if (!scanner.hasNextDouble()) {
+				System.out.println("Error: Amount must be a number.");
+				scanner.nextLine();
+				continue;
+			}
+			baseAmount = scanner.nextDouble();
+			scanner.nextLine();
+			if (baseAmount <= 0) {
+				System.out.println("Error: Amount must be positive.");
+				continue;
+			}
+			// Check minimum for premium restaurants
+			if (restaurant instanceof PremiumRestaurant) {
+				PremiumRestaurant pr = (PremiumRestaurant) restaurant;
+				if (baseAmount < pr.getMinOrderCost()) {
+					System.out.println("Error: Amount " + baseAmount + " is below the minimum of "
+							+ pr.getMinOrderCost() + " for this restaurant.");
+					continue;
+				}
+			}
+			break;
 		}
 
 		// Order date
@@ -943,14 +1047,18 @@ public class Main {
 			System.out.println("Street address updated successfully.");
 		}
 
-		System.out.print("Enter new phone (press Enter to keep current: " + customer.getPhone() + "): ");
-		String newPhone = scanner.nextLine();
-		if (isNonEmpty(newPhone)) {
+		while (true) {
+			System.out.print("Enter new phone (press Enter to keep current: " + customer.getPhone() + "): ");
+			String newPhone = scanner.nextLine();
+			if (!isNonEmpty(newPhone)) {
+				break;
+			}
 			if (!isValidPhone(newPhone)) {
 				System.out.println("Error: Invalid phone format. Phone was not updated.");
 			} else {
 				customer.setPhone(newPhone);
 				System.out.println("Phone updated successfully.");
+				break;
 			}
 		}
 	}
