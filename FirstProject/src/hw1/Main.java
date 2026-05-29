@@ -1,5 +1,6 @@
 package hw1;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -7,7 +8,7 @@ public class Main {
 	public static void main(String[] args) {
 
 		// Create an instance of the system
-		DeliverySystem system = new DeliverySystem();
+		DeliveryDataBase system = new DeliveryDataBase();
 
 		// Create a manager by admin name, username, password
 		Admin mainAdmin = new Admin("System Admin", "admin", "12345");
@@ -15,74 +16,74 @@ public class Main {
 		System.out.println("Loading data into the system...");
 
 		// Creating 5 Riders
-		system.addRider(new Rider("123456789", "משה ישראלי", "050-1010101", "אופניים", true, new Order[50], 0));
-		system.addRider(new Rider("234567890", "אורן לבנה", "052-2020202", "קטנוע", true, new Order[50], 0));
-		system.addRider(new Rider("345678901", "עדן שמש", "054-3030303", "מכונית", true, new Order[50], 0));
-		system.addRider(new Rider("456789012", "ליאל ים", "053-4040404", "אופניים", true, new Order[50], 0));
-		system.addRider(new Rider("567890123", "רון אור", "058-5050505", "קטנוע", true, new Order[50], 0));
+		system.addRider(new Rider("123456789", "Adi Ben Shitirt", "050-1010101", "Bicycle", true));
+		system.addRider(new Rider("234567890", "Moran Asraf", "052-2020202", "motorcycle", true));
+		system.addRider(new Rider("345678901", "Shlomit Golan", "054-3030303", "car", true));
+		system.addRider(new Rider("456789012", "Halel Saida", "053-4040404", "car", true));
+		system.addRider(new Rider("567890123", "Eliya Saida", "058-5050505", "motorcycle", true));
 
 		// Creating 10 customers
-		system.addCustomer(new Customer("C1", "ליאן", "סיידה", "טבריה", "הגליל 1", "1400000", "052-5211311",
+		system.addCustomer(new Customer("1", "Lian", "Saida", "Tiberias", "Hagalil", "1400000", "052-5211311",
 				"lian@gmail.com", 0.0));
 		system.addCustomer(
-				new Customer("C2", "דני", "כהן", "חיפה", "הנמל 10", "3303220", "050-1111111", "dani@gmail.com", 0.0));
-		system.addCustomer(new Customer("C3", "רונית", "לוי", "תל אביב", "דיזנגוף 50", "6433221", "054-2222222",
-				"ronit@gmail.com", 0.0));
+				new Customer("2", "May", "Golan", "Haifa", "Hanamal", "3303220", "050-1111111", "may@gmail.com", 0.0));
+		system.addCustomer(new Customer("3", "Ron", "Levi", "Tel Aviv", "Dizengoff", "6433221", "054-2222222",
+				"ron@gmail.com", 0.0));
 		system.addCustomer(
-				new Customer("C4", "יעל", "בר", "ירושלים", "יפו 30", "9455667", "052-3333333", "yael@gmail.com", 0.0));
-		system.addCustomer(new Customer("C5", "עומר", "גולן", "אילת", "התמרים 5", "8800000", "053-4444444",
+				new Customer("4", "Yael", "Bar", "Acre", "Ben Ami", "9455667", "052-3333333", "yael@gmail.com", 0.0));
+		system.addCustomer(new Customer("5", "Omer", "Golan", "Eilat", "Hatmarim", "8800000", "053-4444444",
 				"omer@gmail.com", 0.0));
-		system.addCustomer(new Customer("C6", "שיר", "ביטון", "אשדוד", "הציונות 12", "7744332", "050-5555555",
+		system.addCustomer(new Customer("6", "Shir", "Bitton", "Ashdod", "Hatzyonot", "7744332", "050-5555555",
 				"shir@gmail.com", 0.0));
-		system.addCustomer(new Customer("C7", "עמית", "קדוש", "חיפה", "מוריה 15", "3455566", "054-6666666",
+		system.addCustomer(new Customer("7", "Amit", "Bar", "Tiberias", "Golda Meir", "3455566", "054-6666666",
 				"amit@gmail.com", 0.0));
 		system.addCustomer(
-				new Customer("C8", "נועה", "רוזן", "נתניה", "הרצל 8", "4222333", "052-7777777", "noa@gmail.com", 0.0));
-		system.addCustomer(new Customer("C9", "איתי", "שלום", "טבריה", "הבנים 2", "1411122", "053-8888888",
+				new Customer("8", "Noa", "Cohen", "Haifa", "Moriya", "4222333", "052-7777777", "noa@gmail.com", 0.0));
+		system.addCustomer(new Customer("9", "Itay", "Shalom", "Tiberias", "Habanim", "1411122", "053-8888888",
 				"itay@gmail.com", 0.0));
-		system.addCustomer(new Customer("C10", "מאיה", "חן", "ראשון לציון", "רוטשילד 20", "7522233", "050-9999999",
+		system.addCustomer(new Customer("10", "Maya", "Cohen", "Rishon LeZion", "Rotshild", "7522233", "050-9999999",
 				"maya@gmail.com", 0.0));
 
 		// Creating 10 regular restaurants
-		system.addRestaurant(new Restaurant("R1", "פיצה בלה", "איטלקי", 4.5, true, 20.0));
-		system.addRestaurant(new Restaurant("R2", "סושי מאסטר", "אסייתי", 4.2, false, 25.0));
-		system.addRestaurant(new Restaurant("R3", "נאפיס", "ישראלי", 4.0, true, 15.0));
-		system.addRestaurant(new Restaurant("R4", "קפה גרג", "בית קפה", 4.3, true, 18.0));
-		system.addRestaurant(new Restaurant("R5", "לנדוור", "בית קפה", 4.1, true, 20.0));
-		system.addRestaurant(new Restaurant("R6", "שווארמה הנשיא", "בשרים", 4.6, true, 15.0));
-		system.addRestaurant(new Restaurant("R7", "בית הפנקייק", "קינוחים", 4.4, false, 20.0));
-		system.addRestaurant(new Restaurant("R8", "פלאפל הכיכר", "אוכל רחוב", 4.8, true, 10.0));
-		system.addRestaurant(new Restaurant("R9", "בר סלטים", "בריאות", 4.2, true, 15.0));
-		system.addRestaurant(new Restaurant("R10", "חומוס סעיד", "ישראלי", 4.9, true, 12.0));
+		system.addRestaurant(new Restaurant("R1", "Pizza Bella", "Italian", 4.5, true, 20.0));
+		system.addRestaurant(new Restaurant("R2", "Sushi Master", "Asian", 4.2, false, 25.0));
+		system.addRestaurant(new Restaurant("R3", "Napis", "Israeli", 4.0, true, 15.0));
+		system.addRestaurant(new Restaurant("R4", "Cafe Greg", "Cafe", 4.3, true, 18.0));
+		system.addRestaurant(new Restaurant("R5", "Landwer", "Cafe", 4.1, true, 20.0));
+		system.addRestaurant(new Restaurant("R6", "Shawarma Hanasi", "Meat", 4.6, true, 15.0));
+		system.addRestaurant(new Restaurant("R7", "The Pancake House", "Desserts", 4.4, false, 20.0));
+		system.addRestaurant(new Restaurant("R8", "Falafel Hakikar", "Street Food", 4.8, true, 10.0));
+		system.addRestaurant(new Restaurant("R9", "Salad Bar", "Healthy", 4.2, true, 15.0));
+		system.addRestaurant(new Restaurant("R10", "Hummus Said", "Israeli", 4.9, true, 12.0));
 
 		// Creating 10 fast food restaurant
-		system.addRestaurant(new FastFoodRestaurant("F1", "מקדונלדס", "המבורגר", 3.8, false, 15.0, 10, 5.0));
-		system.addRestaurant(new FastFoodRestaurant("F2", "בורגר קינג", "המבורגר", 3.9, true, 15.0, 12, 5.0));
-		system.addRestaurant(new FastFoodRestaurant("F3", "דומינוס", "פיצה", 4.0, false, 12.0, 15, 6.0));
-		system.addRestaurant(new FastFoodRestaurant("F4", "פיצה האט", "פיצה", 4.1, true, 15.0, 15, 7.0));
-		system.addRestaurant(new FastFoodRestaurant("F5", "סאבווי", "כריכים", 3.7, true, 10.0, 8, 4.0));
-		system.addRestaurant(new FastFoodRestaurant("F6", "KFC", "עוף", 3.5, false, 20.0, 15, 8.0));
-		system.addRestaurant(new FastFoodRestaurant("F7", "ג'פניקה", "אסייתי", 4.2, true, 25.0, 20, 10.0));
-		system.addRestaurant(new FastFoodRestaurant("F8", "טאקו בל", "מקסיקני", 3.6, false, 15.0, 10, 5.0));
-		system.addRestaurant(new FastFoodRestaurant("F9", "מקס ברנר", "קינוחים", 4.5, true, 20.0, 15, 10.0));
-		system.addRestaurant(new FastFoodRestaurant("F10", "גולדה", "גלידה", 4.8, true, 10.0, 5, 5.0));
+		system.addRestaurant(new FastFoodRestaurant("F1", "McDonalds", "Burgers", 3.8, false, 15.0, 10, 5.0));
+		system.addRestaurant(new FastFoodRestaurant("F2", "Burger King", "Burgers", 3.9, true, 15.0, 12, 5.0));
+		system.addRestaurant(new FastFoodRestaurant("F3", "Dominos", "Pizza", 4.0, false, 12.0, 15, 6.0));
+		system.addRestaurant(new FastFoodRestaurant("F4", "Pizza Hut", "Pizza", 4.1, true, 15.0, 15, 7.0));
+		system.addRestaurant(new FastFoodRestaurant("F5", "Subway", "Sandwiches", 3.7, true, 10.0, 8, 4.0));
+		system.addRestaurant(new FastFoodRestaurant("F6", "KFC", "Chicken", 3.5, false, 20.0, 15, 8.0));
+		system.addRestaurant(new FastFoodRestaurant("F7", "Japanica", "Asian", 4.2, true, 25.0, 20, 10.0));
+		system.addRestaurant(new FastFoodRestaurant("F8", "Taco Bell", "Mexican", 3.6, false, 15.0, 10, 5.0));
+		system.addRestaurant(new FastFoodRestaurant("F9", "Max Brenner", "Desserts", 4.5, true, 20.0, 15, 10.0));
+		system.addRestaurant(new FastFoodRestaurant("F10", "Golda", "Ice Cream", 4.8, true, 10.0, 5, 5.0));
 
 		// Creating 10 Premium restaurant
-		system.addRestaurant(new PremiumRestaurant("P1", "מיט בר", "בשרים", 4.8, true, 30.0, 150.0, 10.0));
-		system.addRestaurant(new PremiumRestaurant("P2", "שגב ארט", "שף", 4.9, false, 40.0, 200.0, 15.0));
-		system.addRestaurant(new PremiumRestaurant("P3", "מחניודה", "שף", 4.7, false, 35.0, 180.0, 12.0));
-		system.addRestaurant(new PremiumRestaurant("P4", "הדסון", "בשרים", 4.9, false, 30.0, 250.0, 15.0));
-		system.addRestaurant(new PremiumRestaurant("P5", "טאיזו", "אסייתי", 4.8, false, 35.0, 200.0, 12.0));
-		system.addRestaurant(new PremiumRestaurant("P6", "פופינה", "שף", 4.6, false, 30.0, 150.0, 10.0));
-		system.addRestaurant(new PremiumRestaurant("P7", "שילה", "פירות ים", 4.7, false, 40.0, 220.0, 15.0));
-		system.addRestaurant(new PremiumRestaurant("P8", "פסטל", "צרפתי", 4.5, true, 35.0, 180.0, 10.0));
-		system.addRestaurant(new PremiumRestaurant("P9", "בלו סקיי", "שף", 4.8, true, 40.0, 250.0, 15.0));
-		system.addRestaurant(new PremiumRestaurant("P10", "אופא", "טבעוני", 4.6, true, 30.0, 150.0, 10.0));
+		system.addRestaurant(new PremiumRestaurant("P1", "Meat Bar", "Meat", 4.8, true, 30.0, 150.0, 10.0));
+		system.addRestaurant(new PremiumRestaurant("P2", "Segev Art", "Chef", 4.9, false, 40.0, 200.0, 15.0));
+		system.addRestaurant(new PremiumRestaurant("P3", "Machneyuda", "Chef", 4.7, false, 35.0, 180.0, 12.0));
+		system.addRestaurant(new PremiumRestaurant("P4", "Hudson", "Meat", 4.9, false, 30.0, 250.0, 15.0));
+		system.addRestaurant(new PremiumRestaurant("P5", "Taizu", "Asian", 4.8, false, 35.0, 200.0, 12.0));
+		system.addRestaurant(new PremiumRestaurant("P6", "Popina", "Chef", 4.6, false, 30.0, 150.0, 10.0));
+		system.addRestaurant(new PremiumRestaurant("P7", "Shila", "Seafood", 4.7, false, 40.0, 220.0, 15.0));
+		system.addRestaurant(new PremiumRestaurant("P8", "Pastel", "French", 4.5, true, 35.0, 180.0, 10.0));
+		system.addRestaurant(new PremiumRestaurant("P9", "Blue Sky", "Chef", 4.8, true, 40.0, 250.0, 15.0));
+		system.addRestaurant(new PremiumRestaurant("P10", "Opa", "Vegan", 4.6, true, 30.0, 150.0, 10.0));
 
 		// Creating 3 rest admin
-		system.addRestAdmin(new RestAdmin("יוסי כהן", "yossi_admin", "pass123", new Restaurant[50], 0));
-		system.addRestAdmin(new RestAdmin("דנה לוי", "dana_admin", "pass456", new Restaurant[50], 0));
-		system.addRestAdmin(new RestAdmin("אלי אוחנה", "eli_admin", "pass789", new Restaurant[50], 0));
+		system.addRestAdmin(new RestAdmin("Yossi Cohen", "yossi_admin", "pass123"));
+		system.addRestAdmin(new RestAdmin("Dana Levi", "dana_admin", "pass456"));
+		system.addRestAdmin(new RestAdmin("Eli Ochana", "eli_admin", "pass789"));
 
 		// main menu
 
@@ -120,7 +121,7 @@ public class Main {
 
 	// Login and menu for system admin
 	// Handles system admin login and sub-menu
-	private static void adminLogin(Scanner scanner, DeliverySystem system, Admin mainAdmin) {
+	private static void adminLogin(Scanner scanner, DeliveryDataBase system, Admin mainAdmin) {
 		System.out.print("Enter username: ");
 		String inputUser = scanner.nextLine();
 		System.out.print("Enter password: ");
@@ -170,7 +171,7 @@ public class Main {
 
 	// Login and menu for restaurant manager
 	// Handles restaurant manager login and sub-menu. RestAdmin
-	private static void restAdminLogin(Scanner scanner, DeliverySystem system) {
+	private static void restAdminLogin(Scanner scanner, DeliveryDataBase system) {
 		System.out.print("Enter username: ");
 		String inputUser = scanner.nextLine();
 		System.out.print("Enter password: ");
@@ -215,7 +216,7 @@ public class Main {
 
 	// Rider login and menu
 	// Handles rider login and sub-menu
-	private static void riderLogin(Scanner scanner, DeliverySystem system) {
+	private static void riderLogin(Scanner scanner, DeliveryDataBase system) {
 		System.out.print("Enter your ID number (9 digits): ");
 		String idInput = scanner.nextLine();
 
@@ -257,7 +258,7 @@ public class Main {
 
 	// Customer login and menu
 	// Handles customer login and sub-menu.
-	private static void customerLogin(Scanner scanner, DeliverySystem system) {
+	private static void customerLogin(Scanner scanner, DeliveryDataBase system) {
 		System.out.print("Enter your customer code: ");
 		String codeInput = scanner.nextLine();
 
@@ -305,17 +306,16 @@ public class Main {
 
 	// Shared action methods
 	// Adds a new customer to the system
-	private static void addCustomer(Scanner scanner, DeliverySystem system) {
+	private static void addCustomer(Scanner scanner, DeliveryDataBase system) {
 		System.out.println("Add Customer");
 
+		// Customer code - loop until valid and unique
 		String code;
 		while (true) {
-			System.out.print("Enter customer code (e.g. C11): ");
+			System.out.print("Enter customer code (number only, e.g. 11): ");
 			code = scanner.nextLine();
 			if (!isNonEmpty(code)) {
 				System.out.println("Error: Customer code cannot be empty.");
-			} else if (Character.toUpperCase(code.charAt(0)) != 'C') {
-				System.out.println("Error: Customer code must start with the letter 'C' (e.g. C11).");
 			} else if (system.findCustomerById(code) != null) {
 				System.out.println("Error: A customer with this code already exists.");
 			} else {
@@ -423,9 +423,10 @@ public class Main {
 	}
 
 	// Adds a new RestAdmin to the system.
-	private static void addRestAdmin(Scanner scanner, DeliverySystem system) {
+	private static void addRestAdmin(Scanner scanner, DeliveryDataBase system) {
 		System.out.println(" Add Restaurant Manager");
 
+		// Manager full name
 		String name;
 		while (true) {
 			System.out.print("Enter manager full name: ");
@@ -435,6 +436,7 @@ public class Main {
 			System.out.println("Error: Name cannot be empty.");
 		}
 
+		// Username - must be unique
 		String username;
 		while (true) {
 			System.out.print("Enter username: ");
@@ -448,6 +450,7 @@ public class Main {
 			}
 		}
 
+		// Password
 		String password;
 		while (true) {
 			System.out.print("Enter password: ");
@@ -457,7 +460,7 @@ public class Main {
 			System.out.println("Error: Password cannot be empty.");
 		}
 
-		RestAdmin newAdmin = new RestAdmin(name, username, password, new Restaurant[50], 0);
+		RestAdmin newAdmin = new RestAdmin(name, username, password);
 		boolean added = system.addRestAdmin(newAdmin);
 		if (added) {
 			System.out.println("Restaurant manager added successfully! Username: " + username);
@@ -467,9 +470,10 @@ public class Main {
 	}
 
 	// Assigns an existing restaurant manager to an existing restaurant
-	private static void assignManagerToRestaurant(Scanner scanner, DeliverySystem system) {
+	private static void assignManagerToRestaurant(Scanner scanner, DeliveryDataBase system) {
 		System.out.println("Assign Manager to Restaurant");
 
+		// Manager username - loop until found
 		String username;
 		RestAdmin admin;
 		while (true) {
@@ -487,6 +491,7 @@ public class Main {
 			}
 		}
 
+		// Restaurant code - loop until found
 		String restCode;
 		Restaurant restaurant;
 		while (true) {
@@ -514,8 +519,10 @@ public class Main {
 	}
 
 	// Adds a new restaurant to the system
-	private static void addRestaurant(Scanner scanner, DeliverySystem system) {
+	private static void addRestaurant(Scanner scanner, DeliveryDataBase system) {
 		System.out.println("Add Restaurant");
+
+		// Restaurant type - loop until valid selection
 		String typeChoice;
 		while (true) {
 			System.out.println("Choose restaurant type:");
@@ -529,6 +536,7 @@ public class Main {
 			System.out.println("Error: Invalid selection. Please choose 1, 2, or 3.");
 		}
 
+		// Restaurant code - unique
 		String code;
 		while (true) {
 			System.out.print("Enter restaurant code (e.g. R11): ");
@@ -542,6 +550,7 @@ public class Main {
 			}
 		}
 
+		// Restaurant name
 		String name;
 		while (true) {
 			System.out.print("Enter restaurant name: ");
@@ -551,6 +560,7 @@ public class Main {
 			System.out.println("Error: Name cannot be empty.");
 		}
 
+		// Kitchen type
 		String kitchenType;
 		while (true) {
 			System.out.print("Enter kitchen type (e.g. Italian, Asian): ");
@@ -560,6 +570,7 @@ public class Main {
 			System.out.println("Error: Kitchen type cannot be empty.");
 		}
 
+		// Rating 0.0-5.0
 		double rating;
 		while (true) {
 			System.out.print("Enter rating (0.0 - 5.0): ");
@@ -577,6 +588,7 @@ public class Main {
 			}
 		}
 
+		// Is open - true/false
 		boolean isOpen;
 		while (true) {
 			System.out.print("Is the restaurant open? (true/false): ");
@@ -592,6 +604,7 @@ public class Main {
 			System.out.println("Error: Please enter 'true' or 'false'.");
 		}
 
+		// Basic delivery fee
 		double deliveryFee;
 		while (true) {
 			System.out.print("Enter basic delivery fee: ");
@@ -614,11 +627,11 @@ public class Main {
 			System.out.println("Regular restaurant added successfully! Code: " + code);
 
 		} else if (typeChoice.equals("2")) {
-			System.out.print("Enter average prep time in minutes (whole number): ");
 			int prepTime = readPositiveInt(scanner);
 			if (prepTime == -1)
 				return;
 
+			// Fast delivery extra cost
 			double fastExtra;
 			while (true) {
 				System.out.print("Enter fast delivery extra cost: ");
@@ -640,6 +653,7 @@ public class Main {
 			System.out.println("Fast food restaurant added successfully! Code: " + code);
 
 		} else {
+			// Minimum order cost
 			double minCost;
 			while (true) {
 				System.out.print("Enter minimum order cost: ");
@@ -657,6 +671,7 @@ public class Main {
 				}
 			}
 
+			// Extra commission
 			double commission;
 			while (true) {
 				System.out.print("Enter extra commission percentage: ");
@@ -680,9 +695,10 @@ public class Main {
 	}
 
 	// Adds a new rider to the system.
-	private static void addRider(Scanner scanner, DeliverySystem system) {
+	private static void addRider(Scanner scanner, DeliveryDataBase system) {
 		System.out.println("Add Rider");
 
+		// Rider ID - exactly 9 digits and unique
 		String id;
 		while (true) {
 			System.out.print("Enter rider ID number (exactly 9 digits): ");
@@ -696,6 +712,7 @@ public class Main {
 			}
 		}
 
+		// Full name
 		String fullName;
 		while (true) {
 			System.out.print("Enter full name: ");
@@ -705,6 +722,7 @@ public class Main {
 			System.out.println("Error: Name cannot be empty.");
 		}
 
+		// Phone
 		String phone;
 		while (true) {
 			System.out.print("Enter phone (e.g. 0501234567 or 050-1234567): ");
@@ -714,6 +732,7 @@ public class Main {
 			System.out.println("Error: Phone must be 10 digits (e.g. 0501234567 or 050-1234567).");
 		}
 
+		// Vehicle type
 		String vehicle;
 		while (true) {
 			System.out.print("Enter vehicle type (e.g. Bicycle, Scooter, Car): ");
@@ -723,7 +742,7 @@ public class Main {
 			System.out.println("Error: Vehicle type cannot be empty.");
 		}
 
-		Rider newRider = new Rider(id, fullName, phone, vehicle, true, new Order[50], 0);
+		Rider newRider = new Rider(id, fullName, phone, vehicle, true);
 		boolean added = system.addRider(newRider);
 		if (added) {
 			System.out.println("Rider added successfully! ID: " + id);
@@ -733,9 +752,10 @@ public class Main {
 	}
 
 	// Assigns an available rider to an existing order.
-	private static void assignRiderToOrder(Scanner scanner, DeliverySystem system) {
+	private static void assignRiderToOrder(Scanner scanner, DeliveryDataBase system) {
 		System.out.println("Assign Rider to Order");
 
+		// Rider ID - must exist and be available
 		String riderId;
 		Rider rider;
 		while (true) {
@@ -755,6 +775,7 @@ public class Main {
 			}
 		}
 
+		// Order code - must exist
 		String orderId;
 		Order order;
 		while (true) {
@@ -779,9 +800,10 @@ public class Main {
 	}
 
 	// Creates a new order for a RestAdmin.
-	private static void addOrder(Scanner scanner, DeliverySystem system, RestAdmin restAdmin) {
+	private static void addOrder(Scanner scanner, DeliveryDataBase system, RestAdmin restAdmin) {
 		System.out.println("Add Order");
 
+		// Customer code - must exist
 		String customerId;
 		while (true) {
 			System.out.print("Enter customer code: ");
@@ -795,6 +817,7 @@ public class Main {
 			}
 		}
 
+		// Restaurant code - must exist and manager must be responsible for it
 		String restCode;
 		Restaurant restaurant;
 		while (true) {
@@ -814,6 +837,7 @@ public class Main {
 			}
 		}
 
+		// Base order amount - positive, respects premium minimum
 		double baseAmount;
 		while (true) {
 			System.out.print("Enter base order amount: ");
@@ -828,7 +852,6 @@ public class Main {
 				System.out.println("Error: Amount must be positive.");
 				continue;
 			}
-			// Check minimum for premium restaurants
 			if (restaurant instanceof PremiumRestaurant) {
 				PremiumRestaurant pr = (PremiumRestaurant) restaurant;
 				if (baseAmount < pr.getMinOrderCost()) {
@@ -873,9 +896,10 @@ public class Main {
 	}
 
 	// Customer places a new order.
-	private static void placeOrder(Scanner scanner, DeliverySystem system, Customer customer) {
+	private static void placeOrder(Scanner scanner, DeliveryDataBase system, Customer customer) {
 		System.out.println("Place New Order");
 
+		// Restaurant code - must exist
 		String restCode;
 		Restaurant restaurant;
 		while (true) {
@@ -893,6 +917,7 @@ public class Main {
 			}
 		}
 
+		// Base order amount - positive, respects premium minimum
 		double baseAmount;
 		while (true) {
 			System.out.print("Enter base order amount: ");
@@ -907,7 +932,6 @@ public class Main {
 				System.out.println("Error: Amount must be positive.");
 				continue;
 			}
-			// Check minimum for premium restaurants
 			if (restaurant instanceof PremiumRestaurant) {
 				PremiumRestaurant pr = (PremiumRestaurant) restaurant;
 				if (baseAmount < pr.getMinOrderCost()) {
@@ -948,7 +972,7 @@ public class Main {
 	}
 
 	// Rider updates the status of one of their assigned orders.
-	private static void updateOrderStatus(Scanner scanner, DeliverySystem system, Rider rider) {
+	private static void updateOrderStatus(Scanner scanner, DeliveryDataBase system, Rider rider) {
 		System.out.println("Update Order Status");
 
 		System.out.print("Enter order code: ");
@@ -1007,26 +1031,24 @@ public class Main {
 	// Prints all orders assigned to the given rider.
 	private static void printRiderOrders(Rider rider) {
 		System.out.println("Orders for Rider: " + rider.getFullName() + " ");
-		Order[] orders = rider.getCompletedOrders();
-		int count = rider.getOrdersCount();
-		if (count == 0) {
+		ArrayList<Order> orders = rider.getCompletedOrders();
+		if (orders.isEmpty()) {
 			System.out.println("No orders found.");
 			return;
 		}
-		for (int i = 0; i < count; i++) {
-			System.out.println(orders[i].toString());
+		for (Order order : orders) {
+			System.out.println(order.toString());
 		}
 	}
 
 	// Prints all orders placed by the given customer
-	private static void printCustomerOrders(DeliverySystem system, Customer customer) {
+	private static void printCustomerOrders(DeliveryDataBase system, Customer customer) {
 		System.out.println(" Orders for: " + customer.getFirstName() + " " + customer.getLastName() + " ");
-		Order[] allOrders = system.getOrders();
-		int count = system.getOrdersCount();
+		ArrayList<Order> allOrders = system.getOrders();
 		boolean found = false;
-		for (int i = 0; i < count; i++) {
-			if (allOrders[i].getCustomerId().equals(customer.getCustomerCode())) {
-				System.out.println(allOrders[i].toString());
+		for (Order o : allOrders) {
+			if (o.getCustomerId().equals(customer.getCustomerCode())) {
+				System.out.println(o.toString());
 				found = true;
 			}
 		}
@@ -1047,12 +1069,12 @@ public class Main {
 			System.out.println("Street address updated successfully.");
 		}
 
+		// Phone - loop until valid or left empty (Enter to keep current)
 		while (true) {
 			System.out.print("Enter new phone (press Enter to keep current: " + customer.getPhone() + "): ");
 			String newPhone = scanner.nextLine();
-			if (!isNonEmpty(newPhone)) {
-				break;
-			}
+			if (!isNonEmpty(newPhone))
+				break; // keep current phone
 			if (!isValidPhone(newPhone)) {
 				System.out.println("Error: Invalid phone format. Phone was not updated.");
 			} else {
@@ -1064,7 +1086,7 @@ public class Main {
 	}
 
 	// Displays full details of a restaurant found by code.
-	private static void viewRestaurantByCode(Scanner scanner, DeliverySystem system) {
+	private static void viewRestaurantByCode(Scanner scanner, DeliveryDataBase system) {
 		System.out.print("Enter restaurant code: ");
 		String code = scanner.nextLine();
 		if (!isNonEmpty(code)) {

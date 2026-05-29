@@ -1,48 +1,42 @@
 package hw1;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 
 public class RestAdmin extends Admin {
-	// class attributes in addition to the attributes frome Admin
-	private Restaurant[] ManagedRestaurants;
-	private int count;
+	// class attributes in addition to the attributes from Admin
+	private ArrayList<Restaurant> ManagedRestaurants;
 
 	// getters and setters
-	public Restaurant[] getManagedRestaurants() {
+	public ArrayList<Restaurant> getManagedRestaurants() {
 		return ManagedRestaurants;
 	}
 
-	public void setManagedRestaurants(Restaurant[] managedRestaurants) {
+	public void setManagedRestaurants(ArrayList<Restaurant> managedRestaurants) {
 		ManagedRestaurants = managedRestaurants;
 	}
 
+	// Returns the number of managed restaurants
 	public int getCount() {
-		return count;
+		return ManagedRestaurants.size();
 	}
 
-	public void setCount(int count) {
-		this.count = count;
-	}
-
-	// full constructor
-	public RestAdmin(String adminName, String username, String password, Restaurant[] managedRestaurants, int count) {
+	// Constructor - initializes an empty restaurants list
+	public RestAdmin(String adminName, String username, String password) {
 		super(adminName, username, password);
-		ManagedRestaurants = managedRestaurants;
-		this.count = count;
+		ManagedRestaurants = new ArrayList<>();
 	}
 
 	// to string
 	@Override
 	public String toString() {
-		return "RestAdmin [ManagedRestaurants=" + Arrays.toString(ManagedRestaurants) + ", count=" + count
-				+ ", toString()=" + super.toString() + "]";
+		return "RestAdmin [ManagedRestaurants=" + ManagedRestaurants + ", count=" + getCount() + ", toString()="
+				+ super.toString() + "]";
 	}
 
-	// Adds a new restaurant to the array
+	// Adds a new restaurant to the list (no duplicates)
 	public boolean addRestaurant(Restaurant rest) {
-		if (this.count < this.ManagedRestaurants.length) {
-			this.ManagedRestaurants[this.count] = rest;
-			this.count++;
+		if (!ManagedRestaurants.contains(rest)) {
+			ManagedRestaurants.add(rest);
 			return true;
 		}
 		return false;
@@ -50,8 +44,8 @@ public class RestAdmin extends Admin {
 
 	// Checks if this manager is responsible for the restaurant with the given code
 	public boolean managesRestaurant(String restaurantCode) {
-		for (int i = 0; i < this.count; i++) {
-			if (this.ManagedRestaurants[i].getRestaurantCode().equals(restaurantCode)) {
+		for (Restaurant r : ManagedRestaurants) {
+			if (r.getRestaurantCode().equals(restaurantCode)) {
 				return true;
 			}
 		}

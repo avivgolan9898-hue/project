@@ -1,6 +1,6 @@
 package hw1;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 
 public class Rider {
 
@@ -10,8 +10,7 @@ public class Rider {
 	private String Phone;
 	private String Vehicle;
 	private boolean IsAvailable;
-	private Order[] CompletedOrders;
-	private int OrdersCount;
+	private ArrayList<Order> CompletedOrders;
 
 	// getters and setters
 	public String getId() {
@@ -54,40 +53,33 @@ public class Rider {
 		IsAvailable = isAvailable;
 	}
 
-	public Order[] getCompletedOrders() {
+	public ArrayList<Order> getCompletedOrders() {
 		return CompletedOrders;
 	}
 
-	public void setCompletedOrders(Order[] completedOrders) {
+	public void setCompletedOrders(ArrayList<Order> completedOrders) {
 		CompletedOrders = completedOrders;
 	}
 
 	public int getOrdersCount() {
-		return OrdersCount;
-	}
-
-	public void setOrdersCount(int ordersCount) {
-		OrdersCount = ordersCount;
+		return CompletedOrders.size();
 	}
 
 	// full constructor
-	public Rider(String id, String fullName, String phone, String vehicle, boolean isAvailable, Order[] completedOrders,
-			int ordersCount) {
+	public Rider(String id, String fullName, String phone, String vehicle, boolean isAvailable) {
 		super();
 		Id = id;
 		FullName = fullName;
 		Phone = phone;
 		Vehicle = vehicle;
 		IsAvailable = isAvailable;
-		CompletedOrders = completedOrders;
-		OrdersCount = ordersCount;
+		CompletedOrders = new ArrayList<>();
 	}
 
 	// Adds an order to the rider's order array
 	public boolean addOrderToRider(Order order) {
-		if (this.OrdersCount < this.CompletedOrders.length) {
-			this.CompletedOrders[this.OrdersCount] = order;
-			this.OrdersCount++;
+		if (!CompletedOrders.contains(order)) {
+			CompletedOrders.add(order);
 			return true;
 		}
 		return false;
@@ -97,8 +89,8 @@ public class Rider {
 	@Override
 	public String toString() {
 		return "Rider [Id=" + Id + ", FullName=" + FullName + ", Phone=" + Phone + ", Vehicle=" + Vehicle
-				+ ", IsAvailable=" + IsAvailable + ", CompletedOrders=" + Arrays.toString(CompletedOrders)
-				+ ", OrdersCount=" + OrdersCount + "]";
+				+ ", IsAvailable=" + IsAvailable + ", CompletedOrders=" + CompletedOrders + ", OrdersCount="
+				+ getOrdersCount() + "]";
 	}
 
 	// Comparison function
