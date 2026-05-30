@@ -143,6 +143,10 @@ public class Main {
 			System.out.println("4. Add Restaurant");
 			System.out.println("5. Add Rider");
 			System.out.println("6. Assign Rider to Order");
+			System.out.println("7. View All Orders");
+			System.out.println("8. Show Most Active Customer");
+			System.out.println("10. Show Most Active Rider");
+			System.out.println("11. Update Restaurant Status");
 			System.out.println("9. Logout");
 			System.out.print("Select an option: ");
 
@@ -160,6 +164,14 @@ public class Main {
 				addRider(scanner, system);
 			} else if (choice.equals("6")) {
 				assignRiderToOrder(scanner, system);
+			} else if (choice.equals("7")) {
+				viewAllOrders(system);
+			} else if (choice.equals("8")) {
+				showMostActiveCustomer(system);
+			} else if (choice.equals("10")) {
+				showMostActiveRider(system);
+			} else if (choice.equals("11")) {
+				updateRestaurantStatus(scanner, system);
 			} else if (choice.equals("9")) {
 				System.out.println("Logging out...");
 				adminRunning = false;
@@ -192,6 +204,8 @@ public class Main {
 			System.out.println("2. Add Order");
 			System.out.println("3. Add Rider");
 			System.out.println("4. Assign Rider to Order");
+			System.out.println("5. View Orders by Restaurant");
+			System.out.println("6. View Open Restaurants by Kitchen Type");
 			System.out.println("9. Logout");
 			System.out.print("Select an option: ");
 
@@ -205,6 +219,10 @@ public class Main {
 				addRider(scanner, system);
 			} else if (choice.equals("4")) {
 				assignRiderToOrder(scanner, system);
+			} else if (choice.equals("5")) {
+				printOrdersByRestaurant(scanner, system);
+			} else if (choice.equals("6")) {
+				printOpenRestaurantsByKitchenType(scanner, system);
 			} else if (choice.equals("9")) {
 				System.out.println("Logging out...");
 				menuRunning = false;
@@ -775,7 +793,7 @@ public class Main {
 			}
 		}
 
-		// Order code - must exist
+		// Order code - must exist and have no rider yet
 		String orderId;
 		Order order;
 		while (true) {
@@ -788,6 +806,8 @@ public class Main {
 			order = system.findOrderById(orderId);
 			if (order == null) {
 				System.out.println("Error: Order not found.");
+			} else if (order.getRiderId() != null) {
+				System.out.println("Error: This order already has a rider assigned.");
 			} else {
 				break;
 			}
@@ -796,6 +816,7 @@ public class Main {
 		order.setRiderId(riderId);
 		rider.addOrderToRider(order);
 		rider.setIsAvailable(false);
+		order.setStatus("Sent");
 		System.out.println("Rider " + rider.getFullName() + " assigned to order " + orderId + " successfully.");
 	}
 
@@ -805,6 +826,7 @@ public class Main {
 
 		// Customer code - must exist
 		String customerId;
+		Customer orderCustomer;
 		while (true) {
 			System.out.print("Enter customer code: ");
 			customerId = scanner.nextLine();
@@ -816,6 +838,7 @@ public class Main {
 				break;
 			}
 		}
+		orderCustomer = system.findCustomerById(customerId);
 
 		// Restaurant code - must exist and manager must be responsible for it
 		String restCode;
@@ -863,6 +886,16 @@ public class Main {
 			break;
 		}
 
+		// Calculate final price
+		double finalPrice = restaurant.calculateFinalPrice(baseAmount);
+
+		// Check that the customer has enough credit balance
+		if (orderCustomer.getCreditBalance() < finalPrice) {
+			System.out.println("Error: Customer does not have enough credit balance. Balance: "
+					+ orderCustomer.getCreditBalance() + " | Required: " + finalPrice);
+			return;
+		}
+
 		// Order date
 		System.out.print("Enter order day (1-31): ");
 		int day = readIntInRange(scanner, 1, 31);
@@ -880,15 +913,34 @@ public class Main {
 		// Generate order ID automatically
 		String orderId = "ORD" + (system.getOrdersCount() + 1);
 
-		// Calculate final price using polymorphism (calls the correct override per
-		// type)
-		double finalPrice = restaurant.calculateFinalPrice(baseAmount);
-
 		Order newOrder = new Order(orderId, customerId, restaurant, restCode, null, day, month, year, 0, 0, 0,
 				baseAmount, finalPrice, "Sent");
 
 		boolean added = system.addOrder(newOrder);
 		if (added) {
+			int customerCodeInt = Integer.parseInt(customerId);
+
+			// Update HashMap of orders by customer
+			system.addOrderToCustomerMap(customerCodeInt, newOrder);
+
+			// Update Hashtable of restaurants by customer
+			if (!system.getRestaurantsByCustomer().containsKey(customerCodeInt)) {
+				system.getRestaurantsByCustomer().put(customerCodeInt, new java.util.ArrayList<>());
+			}
+			if (!system.getRestaurantsByCustomer().get(customerCodeInt).contains(restaurant)) {
+				system.getRestaurantsByCustomer().get(customerCodeInt).add(restaurant);
+			}
+
+			// Update HashMap of total payments by customer
+			if (!system.getTotalPaymentsByCustomer().containsKey(customerCodeInt)) {
+				system.getTotalPaymentsByCustomer().put(customerCodeInt, 0.0);
+			}
+			system.getTotalPaymentsByCustomer().put(customerCodeInt,
+					system.getTotalPaymentsByCustomer().get(customerCodeInt) + finalPrice);
+
+			// Deduct from customer credit balance
+			orderCustomer.setCreditBalance(orderCustomer.getCreditBalance() - finalPrice);
+
 			System.out.println("Order added successfully! Code: " + orderId + " | Final price: " + finalPrice);
 		} else {
 			System.out.println("Error: Could not add order.");
@@ -1021,6 +1073,7 @@ public class Main {
 			order.setDeliveryDay(day);
 			order.setDeliveryMonth(month);
 			order.setDeliveryYear(year);
+			rider.setIsAvailable(true);
 			System.out.println("Status updated to: Delivered | Date: " + day + "/" + month + "/" + year);
 
 		} else {
@@ -1098,6 +1151,137 @@ public class Main {
 			System.out.println("Error: Restaurant not found.");
 		} else {
 			System.out.println(restaurant.toString());
+		}
+	}
+
+	// Displays all orders in the system (admin only)
+	private static void viewAllOrders(DeliveryDataBase system) {
+		System.out.println("All Orders in the System");
+		ArrayList<Order> allOrders = system.getOrders();
+		if (allOrders.isEmpty()) {
+			System.out.println("No orders found.");
+			return;
+		}
+		for (Order o : allOrders) {
+			System.out.println(o.toString());
+		}
+	}
+
+	// Displays the customer with the most orders (admin only)
+	private static void showMostActiveCustomer(DeliveryDataBase system) {
+		Customer top = system.getMostActiveCustomer();
+		if (top == null) {
+			System.out.println("No orders in the system yet.");
+		} else {
+			System.out.println("Most Active Customer: " + top.toString());
+		}
+	}
+
+	// Displays the rider with the most deliveries (admin only)
+	private static void showMostActiveRider(DeliveryDataBase system) {
+		Rider top = system.getMostActiveRider();
+		if (top == null) {
+			System.out.println("No deliveries in the system yet.");
+		} else {
+			System.out.println("Most Active Rider: " + top.toString());
+		}
+	}
+
+	// Opens or closes a restaurant (admin only)
+	private static void updateRestaurantStatus(Scanner scanner, DeliveryDataBase system) {
+		System.out.println("Update Restaurant Status");
+
+		// Restaurant code - must exist
+		String restCode;
+		Restaurant restaurant;
+		while (true) {
+			System.out.print("Enter restaurant code: ");
+			restCode = scanner.nextLine();
+			if (!isNonEmpty(restCode)) {
+				System.out.println("Error: Restaurant code cannot be empty.");
+				continue;
+			}
+			restaurant = system.findRestaurantById(restCode);
+			if (restaurant == null) {
+				System.out.println("Error: Restaurant not found.");
+			} else {
+				break;
+			}
+		}
+
+		System.out.println("Current status: " + (restaurant.isIsOpen() ? "Open" : "Closed"));
+		boolean newStatus = false;
+		while (true) {
+			System.out.print("Set status - open or closed? (open/closed): ");
+			String statusInput = scanner.nextLine();
+			if (statusInput.equals("open")) {
+				newStatus = true;
+				break;
+			} else if (statusInput.equals("closed")) {
+				newStatus = false;
+				break;
+			} else {
+				System.out.println("Error: Please enter 'open' or 'closed'.");
+			}
+		}
+
+		restaurant.setIsOpen(newStatus);
+		System.out.println(
+				"Restaurant '" + restaurant.getRestaurantName() + "' is now " + (newStatus ? "Open" : "Closed") + ".");
+	}
+
+	// Displays all orders for a specific restaurant 
+	private static void printOrdersByRestaurant(Scanner scanner, DeliveryDataBase system) {
+		System.out.println("View Orders by Restaurant");
+
+		String restCode;
+		while (true) {
+			System.out.print("Enter restaurant code: ");
+			restCode = scanner.nextLine();
+			if (!isNonEmpty(restCode)) {
+				System.out.println("Error: Restaurant code cannot be empty.");
+				continue;
+			}
+			if (system.findRestaurantById(restCode) == null) {
+				System.out.println("Error: Restaurant not found.");
+			} else {
+				break;
+			}
+		}
+
+		boolean found = false;
+		for (Order o : system.getOrders()) {
+			if (o.getRestaurantId().equals(restCode)) {
+				System.out.println(o.toString());
+				found = true;
+			}
+		}
+		if (!found) {
+			System.out.println("No orders found for this restaurant.");
+		}
+	}
+
+	// Displays all open restaurants by kitchen type 
+	private static void printOpenRestaurantsByKitchenType(Scanner scanner, DeliveryDataBase system) {
+		System.out.println("View Open Restaurants by Kitchen Type");
+
+		String kitchenType;
+		while (true) {
+			System.out.print("Enter kitchen type (e.g. Italian, Asian): ");
+			kitchenType = scanner.nextLine();
+			if (isNonEmpty(kitchenType))
+				break;
+			System.out.println("Error: Kitchen type cannot be empty.");
+		}
+
+		ArrayList<Restaurant> result = system.getOpenRestaurantsByKitchenType(kitchenType);
+		if (result.isEmpty()) {
+			System.out.println("No open restaurants found for kitchen type: " + kitchenType);
+		} else {
+			System.out.println("Open restaurants of type '" + kitchenType + "':");
+			for (Restaurant r : result) {
+				System.out.println(r.toString());
+			}
 		}
 	}
 
