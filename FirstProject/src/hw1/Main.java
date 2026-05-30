@@ -120,7 +120,7 @@ public class Main {
 	}
 
 	// Login and menu for system admin
-	// Handles system admin login and sub-menu
+	// system admin login, sub-menu
 	private static void adminLogin(Scanner scanner, DeliveryDataBase system, Admin mainAdmin) {
 		System.out.print("Enter username: ");
 		String inputUser = scanner.nextLine();
