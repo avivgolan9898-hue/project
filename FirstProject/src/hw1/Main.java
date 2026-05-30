@@ -497,7 +497,6 @@ public class Main {
 		}
 	}
 
-	// Shared action methods
 	// Adds a new customer to the system
 	private static void addCustomer(Scanner scanner, DeliveryDataBase system) {
 		System.out.println("Add Customer");
@@ -526,7 +525,7 @@ public class Main {
 			System.out.println("Error: First name must contain letters only, no digits or special characters.");
 		}
 
-		// Last name - letters and spaces allowed (compound names)
+		// Last name - letters and spaces allowed 
 		String lastName;
 		while (true) {
 			System.out.print("Enter last name (letters only, spaces allowed): ");
@@ -1287,7 +1286,7 @@ public class Main {
 		}
 	}
 
-	// Prints the active order of the rider (status: Sent or On the way)
+	// Prints the active order of the rider 
 	private static void printRiderActiveOrder(DeliveryDataBase system, Rider rider) {
 		System.out.println("Active Order for Rider: " + rider.getFullName());
 		ArrayList<Order> activeOrders = system.getActiveOrdersByRider(rider.getId());
@@ -1313,7 +1312,7 @@ public class Main {
 		}
 	}
 
-	// Prints all orders placed by the given customer - uses HashMap
+	// Prints all orders placed by the given customer 
 	private static void printCustomerOrders(DeliveryDataBase system, Customer customer) {
 		System.out.println(" Orders for: " + customer.getFirstName() + " " + customer.getLastName() + " ");
 		int customerCodeInt = Integer.parseInt(customer.getCustomerCode());
@@ -1451,7 +1450,7 @@ public class Main {
 		}
 	}
 
-	// Displays the customer with the most orders (admin only)
+	// Displays the customer with the most orders 
 	private static void showMostActiveCustomer(DeliveryDataBase system) {
 		Customer top = system.getMostActiveCustomer();
 		if (top == null) {
@@ -1461,7 +1460,7 @@ public class Main {
 		}
 	}
 
-	// Displays the rider with the most deliveries (admin only)
+	// Displays the rider with the most deliveries 
 	private static void showMostActiveRider(DeliveryDataBase system) {
 		Rider top = system.getMostActiveRider();
 		if (top == null) {
@@ -1471,7 +1470,7 @@ public class Main {
 		}
 	}
 
-	// Opens or closes a restaurant (admin only)
+	// Opens or closes a restaurant 
 	private static void updateRestaurantStatus(Scanner scanner, DeliveryDataBase system) {
 		System.out.println("Update Restaurant Status");
 
@@ -1514,7 +1513,7 @@ public class Main {
 				"Restaurant '" + restaurant.getRestaurantName() + "' is now " + (newStatus ? "Open" : "Closed") + ".");
 	}
 
-	// Displays all restaurants the customer ordered from - uses Hashtable
+	// Displays all restaurants the customer ordered from
 	private static void viewMyRestaurants(DeliveryDataBase system, Customer customer) {
 		System.out.println("Restaurants You Ordered From");
 		int customerCodeInt = Integer.parseInt(customer.getCustomerCode());
