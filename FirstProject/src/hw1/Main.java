@@ -85,6 +85,168 @@ public class Main {
 		system.addRestAdmin(new RestAdmin("Dana Levi", "dana_admin", "pass456"));
 		system.addRestAdmin(new RestAdmin("Eli Ochana", "eli_admin", "pass789"));
 
+		// Set initial credit balances so pre-loaded orders can be placed
+		system.findCustomerById("1").setCreditBalance(500.0);
+		system.findCustomerById("2").setCreditBalance(500.0);
+		system.findCustomerById("3").setCreditBalance(500.0);
+		system.findCustomerById("4").setCreditBalance(300.0);
+		system.findCustomerById("5").setCreditBalance(300.0);
+		system.findCustomerById("6").setCreditBalance(300.0);
+		system.findCustomerById("7").setCreditBalance(500.0);
+
+		// Fetch restaurants and riders needed for pre-loaded orders
+		Restaurant r1 = system.findRestaurantById("R1");
+		Restaurant r3 = system.findRestaurantById("R3");
+		Restaurant r6 = system.findRestaurantById("R6");
+		Restaurant r8 = system.findRestaurantById("R8");
+		Restaurant f2 = system.findRestaurantById("F2");
+		Restaurant f4 = system.findRestaurantById("F4");
+		Restaurant f5 = system.findRestaurantById("F5");
+		Restaurant p1 = system.findRestaurantById("P1");
+		Restaurant p8 = system.findRestaurantById("P8");
+		Rider rider1 = system.findRiderById("123456789");
+		Rider rider2 = system.findRiderById("234567890");
+		Rider rider3 = system.findRiderById("345678901");
+		Rider rider4 = system.findRiderById("456789012");
+		Rider rider5 = system.findRiderById("567890123");
+
+		// Adding 10 initial orders
+
+		// Order 1: Customer 1, R1 (regular), base=100, final=120, Delivered
+		double fp1 = r1.calculateFinalPrice(100.0);
+		Order ord1 = new Order("ORD1", "1", r1, "R1", rider1.getId(), 5, 1, 2026, 6, 1, 2026, 100.0, fp1, "Delivered");
+		system.addOrder(ord1);
+		system.addOrderToCustomerMap(1, ord1);
+		if (!system.getRestaurantsByCustomer().containsKey(1))
+			system.getRestaurantsByCustomer().put(1, new java.util.ArrayList<>());
+		if (!system.getRestaurantsByCustomer().get(1).contains(r1))
+			system.getRestaurantsByCustomer().get(1).add(r1);
+		if (!system.getTotalPaymentsByCustomer().containsKey(1))
+			system.getTotalPaymentsByCustomer().put(1, 0.0);
+		system.getTotalPaymentsByCustomer().put(1, system.getTotalPaymentsByCustomer().get(1) + fp1);
+		system.findCustomerById("1").setCreditBalance(system.findCustomerById("1").getCreditBalance() - fp1);
+		rider1.addOrderToRider(ord1);
+
+		// Order 2: Customer 2, F2 (fast food), base=80, final=100, Delivered
+		double fp2 = f2.calculateFinalPrice(80.0);
+		Order ord2 = new Order("ORD2", "2", f2, "F2", rider2.getId(), 7, 1, 2026, 8, 1, 2026, 80.0, fp2, "Delivered");
+		system.addOrder(ord2);
+		system.addOrderToCustomerMap(2, ord2);
+		if (!system.getRestaurantsByCustomer().containsKey(2))
+			system.getRestaurantsByCustomer().put(2, new java.util.ArrayList<>());
+		if (!system.getRestaurantsByCustomer().get(2).contains(f2))
+			system.getRestaurantsByCustomer().get(2).add(f2);
+		if (!system.getTotalPaymentsByCustomer().containsKey(2))
+			system.getTotalPaymentsByCustomer().put(2, 0.0);
+		system.getTotalPaymentsByCustomer().put(2, system.getTotalPaymentsByCustomer().get(2) + fp2);
+		system.findCustomerById("2").setCreditBalance(system.findCustomerById("2").getCreditBalance() - fp2);
+		rider2.addOrderToRider(ord2);
+
+		// Order 3: Customer 3, P1 (premium), base=200, final=250, Delivered
+		double fp3 = p1.calculateFinalPrice(200.0);
+		Order ord3 = new Order("ORD3", "3", p1, "P1", rider3.getId(), 9, 1, 2026, 10, 1, 2026, 200.0, fp3, "Delivered");
+		system.addOrder(ord3);
+		system.addOrderToCustomerMap(3, ord3);
+		if (!system.getRestaurantsByCustomer().containsKey(3))
+			system.getRestaurantsByCustomer().put(3, new java.util.ArrayList<>());
+		if (!system.getRestaurantsByCustomer().get(3).contains(p1))
+			system.getRestaurantsByCustomer().get(3).add(p1);
+		if (!system.getTotalPaymentsByCustomer().containsKey(3))
+			system.getTotalPaymentsByCustomer().put(3, 0.0);
+		system.getTotalPaymentsByCustomer().put(3, system.getTotalPaymentsByCustomer().get(3) + fp3);
+		system.findCustomerById("3").setCreditBalance(system.findCustomerById("3").getCreditBalance() - fp3);
+		rider3.addOrderToRider(ord3);
+
+		// Order 4: Customer 4, R3 (regular), base=60, final=75, On the way
+		double fp4 = r3.calculateFinalPrice(60.0);
+		Order ord4 = new Order("ORD4", "4", r3, "R3", rider4.getId(), 10, 1, 2026, 0, 0, 0, 60.0, fp4, "On the way");
+		system.addOrder(ord4);
+		system.addOrderToCustomerMap(4, ord4);
+		if (!system.getRestaurantsByCustomer().containsKey(4))
+			system.getRestaurantsByCustomer().put(4, new java.util.ArrayList<>());
+		if (!system.getRestaurantsByCustomer().get(4).contains(r3))
+			system.getRestaurantsByCustomer().get(4).add(r3);
+		if (!system.getTotalPaymentsByCustomer().containsKey(4))
+			system.getTotalPaymentsByCustomer().put(4, 0.0);
+		system.getTotalPaymentsByCustomer().put(4, system.getTotalPaymentsByCustomer().get(4) + fp4);
+		system.findCustomerById("4").setCreditBalance(system.findCustomerById("4").getCreditBalance() - fp4);
+		rider4.addOrderToRider(ord4);
+		rider4.setIsAvailable(false);
+
+		// Order 5: Customer 5, R6 (regular), base=70, final=85, On the way
+		double fp5 = r6.calculateFinalPrice(70.0);
+		Order ord5 = new Order("ORD5", "5", r6, "R6", rider5.getId(), 10, 1, 2026, 0, 0, 0, 70.0, fp5, "On the way");
+		system.addOrder(ord5);
+		system.addOrderToCustomerMap(5, ord5);
+		if (!system.getRestaurantsByCustomer().containsKey(5))
+			system.getRestaurantsByCustomer().put(5, new java.util.ArrayList<>());
+		if (!system.getRestaurantsByCustomer().get(5).contains(r6))
+			system.getRestaurantsByCustomer().get(5).add(r6);
+		if (!system.getTotalPaymentsByCustomer().containsKey(5))
+			system.getTotalPaymentsByCustomer().put(5, 0.0);
+		system.getTotalPaymentsByCustomer().put(5, system.getTotalPaymentsByCustomer().get(5) + fp5);
+		system.findCustomerById("5").setCreditBalance(system.findCustomerById("5").getCreditBalance() - fp5);
+		rider5.addOrderToRider(ord5);
+		rider5.setIsAvailable(false);
+
+		// Order 6: Customer 1, F4 (fast food), base=90, final=112, Sent
+		double fp6 = f4.calculateFinalPrice(90.0);
+		Order ord6 = new Order("ORD6", "1", f4, "F4", null, 10, 1, 2026, 0, 0, 0, 90.0, fp6, "Sent");
+		system.addOrder(ord6);
+		system.addOrderToCustomerMap(1, ord6);
+		if (!system.getRestaurantsByCustomer().get(1).contains(f4))
+			system.getRestaurantsByCustomer().get(1).add(f4);
+		system.getTotalPaymentsByCustomer().put(1, system.getTotalPaymentsByCustomer().get(1) + fp6);
+		system.findCustomerById("1").setCreditBalance(system.findCustomerById("1").getCreditBalance() - fp6);
+
+		// Order 7: Customer 2, P8 (premium), base=200, final=255, Sent
+		double fp7 = p8.calculateFinalPrice(200.0);
+		Order ord7 = new Order("ORD7", "2", p8, "P8", null, 10, 1, 2026, 0, 0, 0, 200.0, fp7, "Sent");
+		system.addOrder(ord7);
+		system.addOrderToCustomerMap(2, ord7);
+		if (!system.getRestaurantsByCustomer().get(2).contains(p8))
+			system.getRestaurantsByCustomer().get(2).add(p8);
+		system.getTotalPaymentsByCustomer().put(2, system.getTotalPaymentsByCustomer().get(2) + fp7);
+		system.findCustomerById("2").setCreditBalance(system.findCustomerById("2").getCreditBalance() - fp7);
+
+		// Order 8: Customer 6, F5 (fast food), base=50, final=64, Sent
+		double fp8 = f5.calculateFinalPrice(50.0);
+		Order ord8 = new Order("ORD8", "6", f5, "F5", null, 10, 1, 2026, 0, 0, 0, 50.0, fp8, "Sent");
+		system.addOrder(ord8);
+		system.addOrderToCustomerMap(6, ord8);
+		if (!system.getRestaurantsByCustomer().containsKey(6))
+			system.getRestaurantsByCustomer().put(6, new java.util.ArrayList<>());
+		if (!system.getRestaurantsByCustomer().get(6).contains(f5))
+			system.getRestaurantsByCustomer().get(6).add(f5);
+		if (!system.getTotalPaymentsByCustomer().containsKey(6))
+			system.getTotalPaymentsByCustomer().put(6, 0.0);
+		system.getTotalPaymentsByCustomer().put(6, system.getTotalPaymentsByCustomer().get(6) + fp8);
+		system.findCustomerById("6").setCreditBalance(system.findCustomerById("6").getCreditBalance() - fp8);
+
+		// Order 9: Customer 3, R8 (regular), base=40, final=50, Sent
+		double fp9 = r8.calculateFinalPrice(40.0);
+		Order ord9 = new Order("ORD9", "3", r8, "R8", null, 10, 1, 2026, 0, 0, 0, 40.0, fp9, "Sent");
+		system.addOrder(ord9);
+		system.addOrderToCustomerMap(3, ord9);
+		if (!system.getRestaurantsByCustomer().get(3).contains(r8))
+			system.getRestaurantsByCustomer().get(3).add(r8);
+		system.getTotalPaymentsByCustomer().put(3, system.getTotalPaymentsByCustomer().get(3) + fp9);
+		system.findCustomerById("3").setCreditBalance(system.findCustomerById("3").getCreditBalance() - fp9);
+
+		// Order 10: Customer 7, P1 (premium), base=180, final=228, Sent
+		double fp10 = p1.calculateFinalPrice(180.0);
+		Order ord10 = new Order("ORD10", "7", p1, "P1", null, 10, 1, 2026, 0, 0, 0, 180.0, fp10, "Sent");
+		system.addOrder(ord10);
+		system.addOrderToCustomerMap(7, ord10);
+		if (!system.getRestaurantsByCustomer().containsKey(7))
+			system.getRestaurantsByCustomer().put(7, new java.util.ArrayList<>());
+		if (!system.getRestaurantsByCustomer().get(7).contains(p1))
+			system.getRestaurantsByCustomer().get(7).add(p1);
+		if (!system.getTotalPaymentsByCustomer().containsKey(7))
+			system.getTotalPaymentsByCustomer().put(7, 0.0);
+		system.getTotalPaymentsByCustomer().put(7, system.getTotalPaymentsByCustomer().get(7) + fp10);
+		system.findCustomerById("7").setCreditBalance(system.findCustomerById("7").getCreditBalance() - fp10);
+
 		// main menu
 
 		Scanner scanner = new Scanner(System.in);
@@ -233,7 +395,6 @@ public class Main {
 	}
 
 	// Rider login and menu
-	// Handles rider login and sub-menu
 	private static void riderLogin(Scanner scanner, DeliveryDataBase system) {
 		System.out.print("Enter your ID number (9 digits): ");
 		String idInput = scanner.nextLine();
@@ -255,7 +416,8 @@ public class Main {
 		while (menuRunning) {
 			System.out.println(" Rider Menu");
 			System.out.println("1. Update Order Status");
-			System.out.println("2. View All My Orders");
+			System.out.println("2. View My Active Order");
+			System.out.println("3. View All My Orders History");
 			System.out.println("9. Logout");
 			System.out.print("Select an option: ");
 
@@ -264,6 +426,8 @@ public class Main {
 			if (choice.equals("1")) {
 				updateOrderStatus(scanner, system, rider);
 			} else if (choice.equals("2")) {
+				printRiderActiveOrder(system, rider);
+			} else if (choice.equals("3")) {
 				printRiderOrders(rider);
 			} else if (choice.equals("9")) {
 				System.out.println("Logging out...");
@@ -275,7 +439,6 @@ public class Main {
 	}
 
 	// Customer login and menu
-	// Handles customer login and sub-menu.
 	private static void customerLogin(Scanner scanner, DeliveryDataBase system) {
 		System.out.print("Enter your customer code: ");
 		String codeInput = scanner.nextLine();
@@ -298,8 +461,12 @@ public class Main {
 			System.out.println("Customer Menu");
 			System.out.println("1. Place New Order");
 			System.out.println("2. View All My Orders");
-			System.out.println("3. Update Personal Info (address/phone)");
-			System.out.println("4. View Restaurant Details by Code");
+			System.out.println("3. Update Personal Info (address/phone/email)");
+			System.out.println("4. View All Restaurants I Ordered From");
+			System.out.println("5. View Premium Restaurants I Ordered From");
+			System.out.println("6. View Credit Balance");
+			System.out.println("7. Load Credit");
+			System.out.println("8. Withdraw Credit");
 			System.out.println("9. Logout");
 			System.out.print("Select an option: ");
 
@@ -312,7 +479,15 @@ public class Main {
 			} else if (choice.equals("3")) {
 				updateCustomerInfo(scanner, customer);
 			} else if (choice.equals("4")) {
-				viewRestaurantByCode(scanner, system);
+				viewMyRestaurants(system, customer);
+			} else if (choice.equals("5")) {
+				viewMyPremiumRestaurants(system, customer);
+			} else if (choice.equals("6")) {
+				viewCreditBalance(customer);
+			} else if (choice.equals("7")) {
+				loadCreditBalance(scanner, customer);
+			} else if (choice.equals("8")) {
+				withdrawCreditBalance(scanner, customer);
 			} else if (choice.equals("9")) {
 				System.out.println("Logging out...");
 				menuRunning = false;
@@ -1009,14 +1184,45 @@ public class Main {
 		if (year == -1)
 			return;
 
-		String orderId = "ORD" + (system.getOrdersCount() + 1);
 		double finalPrice = restaurant.calculateFinalPrice(baseAmount);
+
+		// Check that the customer has enough credit balance
+		if (customer.getCreditBalance() < finalPrice) {
+			System.out.println("Error: Customer does not have enough credit balance. Balance: "
+					+ customer.getCreditBalance() + " | Required: " + finalPrice);
+			return;
+		}
+
+		String orderId = "ORD" + (system.getOrdersCount() + 1);
 
 		Order newOrder = new Order(orderId, customer.getCustomerCode(), restaurant, restCode, null, day, month, year, 0,
 				0, 0, baseAmount, finalPrice, "Sent");
 
 		boolean added = system.addOrder(newOrder);
 		if (added) {
+			int customerCodeInt = Integer.parseInt(customer.getCustomerCode());
+
+			// Update HashMap of orders by customer
+			system.addOrderToCustomerMap(customerCodeInt, newOrder);
+
+			// Update Hashtable of restaurants by customer
+			if (!system.getRestaurantsByCustomer().containsKey(customerCodeInt)) {
+				system.getRestaurantsByCustomer().put(customerCodeInt, new java.util.ArrayList<>());
+			}
+			if (!system.getRestaurantsByCustomer().get(customerCodeInt).contains(restaurant)) {
+				system.getRestaurantsByCustomer().get(customerCodeInt).add(restaurant);
+			}
+
+			// Update HashMap of total payments by customer
+			if (!system.getTotalPaymentsByCustomer().containsKey(customerCodeInt)) {
+				system.getTotalPaymentsByCustomer().put(customerCodeInt, 0.0);
+			}
+			system.getTotalPaymentsByCustomer().put(customerCodeInt,
+					system.getTotalPaymentsByCustomer().get(customerCodeInt) + finalPrice);
+
+			// Deduct from customer credit balance
+			customer.setCreditBalance(customer.getCreditBalance() - finalPrice);
+
 			System.out.println("Order placed successfully! Code: " + orderId + " | Final price: " + finalPrice);
 		} else {
 			System.out.println("Error: Could not place order.");
@@ -1081,6 +1287,19 @@ public class Main {
 		}
 	}
 
+	// Prints the active order of the rider (status: Sent or On the way)
+	private static void printRiderActiveOrder(DeliveryDataBase system, Rider rider) {
+		System.out.println("Active Order for Rider: " + rider.getFullName());
+		ArrayList<Order> activeOrders = system.getActiveOrdersByRider(rider.getId());
+		if (activeOrders.isEmpty()) {
+			System.out.println("No active order at the moment.");
+		} else {
+			for (Order o : activeOrders) {
+				System.out.println(o.toString());
+			}
+		}
+	}
+
 	// Prints all orders assigned to the given rider.
 	private static void printRiderOrders(Rider rider) {
 		System.out.println("Orders for Rider: " + rider.getFullName() + " ");
@@ -1094,23 +1313,21 @@ public class Main {
 		}
 	}
 
-	// Prints all orders placed by the given customer
+	// Prints all orders placed by the given customer - uses HashMap
 	private static void printCustomerOrders(DeliveryDataBase system, Customer customer) {
 		System.out.println(" Orders for: " + customer.getFirstName() + " " + customer.getLastName() + " ");
-		ArrayList<Order> allOrders = system.getOrders();
-		boolean found = false;
-		for (Order o : allOrders) {
-			if (o.getCustomerId().equals(customer.getCustomerCode())) {
-				System.out.println(o.toString());
-				found = true;
-			}
-		}
-		if (!found) {
+		int customerCodeInt = Integer.parseInt(customer.getCustomerCode());
+		ArrayList<Order> customerOrders = system.getOrdersByCustomer().get(customerCodeInt);
+		if (customerOrders == null || customerOrders.isEmpty()) {
 			System.out.println("No orders found.");
+			return;
+		}
+		for (Order o : customerOrders) {
+			System.out.println(o.toString());
 		}
 	}
 
-	// Allows a customer to update street address and/or phone only
+	// Allows a customer to update street address, phone and email
 	private static void updateCustomerInfo(Scanner scanner, Customer customer) {
 		System.out.println(" Update Personal Info");
 
@@ -1136,25 +1353,92 @@ public class Main {
 				break;
 			}
 		}
+
+		// Email - loop until valid or left empty
+		while (true) {
+			System.out.print("Enter new email (press Enter to keep current: " + customer.getEmail() + "): ");
+			String newEmail = scanner.nextLine();
+			if (!isNonEmpty(newEmail))
+				break;
+			if (!isValidEmail(newEmail)) {
+				System.out.println("Error: Invalid email format. Email was not updated.");
+			} else {
+				customer.setEmail(newEmail);
+				System.out.println("Email updated successfully.");
+				break;
+			}
+		}
 	}
 
-	// Displays full details of a restaurant found by code.
-	private static void viewRestaurantByCode(Scanner scanner, DeliveryDataBase system) {
-		System.out.print("Enter restaurant code: ");
-		String code = scanner.nextLine();
-		if (!isNonEmpty(code)) {
-			System.out.println("Error: Restaurant code cannot be empty.");
+	// Displays premium restaurants the customer ordered from
+	private static void viewMyPremiumRestaurants(DeliveryDataBase system, Customer customer) {
+		System.out.println("Premium Restaurants You Ordered From");
+		ArrayList<Restaurant> premiumRests = system.getPremiumRestaurantsByCustomer(customer);
+		if (premiumRests.isEmpty()) {
+			System.out.println("You have not ordered from any premium restaurant yet.");
 			return;
 		}
-		Restaurant restaurant = system.findRestaurantById(code);
-		if (restaurant == null) {
-			System.out.println("Error: Restaurant not found.");
-		} else {
-			System.out.println(restaurant.toString());
+		for (Restaurant r : premiumRests) {
+			System.out.println(r.toString());
 		}
 	}
 
-	// Displays all orders in the system (admin only)
+	// Displays the customer's current credit balance
+	private static void viewCreditBalance(Customer customer) {
+		System.out.println("Your current credit balance: " + customer.getCreditBalance());
+	}
+
+	// Loads money into the customer's credit balance
+	private static void loadCreditBalance(Scanner scanner, Customer customer) {
+		System.out.println("Load Credit");
+		System.out.println("Current balance: " + customer.getCreditBalance());
+		double amount;
+		while (true) {
+			System.out.print("Enter amount to load (must be positive): ");
+			if (!scanner.hasNextDouble()) {
+				System.out.println("Error: Amount must be a number.");
+				scanner.nextLine();
+				continue;
+			}
+			amount = scanner.nextDouble();
+			scanner.nextLine();
+			if (amount <= 0) {
+				System.out.println("Error: Amount must be positive.");
+			} else {
+				break;
+			}
+		}
+		customer.setCreditBalance(customer.getCreditBalance() + amount);
+		System.out.println("Credit loaded successfully! New balance: " + customer.getCreditBalance());
+	}
+
+	// Withdraws money from the customer's credit balance
+	private static void withdrawCreditBalance(Scanner scanner, Customer customer) {
+		System.out.println("Withdraw Credit");
+		System.out.println("Current balance: " + customer.getCreditBalance());
+		double amount;
+		while (true) {
+			System.out.print("Enter amount to withdraw (must be positive): ");
+			if (!scanner.hasNextDouble()) {
+				System.out.println("Error: Amount must be a number.");
+				scanner.nextLine();
+				continue;
+			}
+			amount = scanner.nextDouble();
+			scanner.nextLine();
+			if (amount <= 0) {
+				System.out.println("Error: Amount must be positive.");
+			} else if (amount > customer.getCreditBalance()) {
+				System.out.println("Error: Insufficient balance. Current balance: " + customer.getCreditBalance());
+			} else {
+				break;
+			}
+		}
+		customer.setCreditBalance(customer.getCreditBalance() - amount);
+		System.out.println("Withdrawal successful! New balance: " + customer.getCreditBalance());
+	}
+
+	// Displays all orders in the system
 	private static void viewAllOrders(DeliveryDataBase system) {
 		System.out.println("All Orders in the System");
 		ArrayList<Order> allOrders = system.getOrders();
@@ -1230,7 +1514,21 @@ public class Main {
 				"Restaurant '" + restaurant.getRestaurantName() + "' is now " + (newStatus ? "Open" : "Closed") + ".");
 	}
 
-	// Displays all orders for a specific restaurant 
+	// Displays all restaurants the customer ordered from - uses Hashtable
+	private static void viewMyRestaurants(DeliveryDataBase system, Customer customer) {
+		System.out.println("Restaurants You Ordered From");
+		int customerCodeInt = Integer.parseInt(customer.getCustomerCode());
+		ArrayList<Restaurant> myRests = system.getRestaurantsByCustomer().get(customerCodeInt);
+		if (myRests == null || myRests.isEmpty()) {
+			System.out.println("You have not ordered from any restaurant yet.");
+			return;
+		}
+		for (Restaurant r : myRests) {
+			System.out.println(r.toString());
+		}
+	}
+
+	// Displays all orders for a specific restaurant
 	private static void printOrdersByRestaurant(Scanner scanner, DeliveryDataBase system) {
 		System.out.println("View Orders by Restaurant");
 
@@ -1261,7 +1559,7 @@ public class Main {
 		}
 	}
 
-	// Displays all open restaurants by kitchen type 
+	// Displays all open restaurants by kitchen type
 	private static void printOpenRestaurantsByKitchenType(Scanner scanner, DeliveryDataBase system) {
 		System.out.println("View Open Restaurants by Kitchen Type");
 
@@ -1392,7 +1690,7 @@ public class Main {
 		return true;
 	}
 
-	// Reads an integer from the user within the range [min, max].
+	// Reads an integer from the user within the range (min, max).
 	private static int readIntInRange(Scanner scanner, int min, int max) {
 		if (!scanner.hasNextInt()) {
 			System.out.println("Error: Must be a whole number.");
@@ -1408,7 +1706,7 @@ public class Main {
 		return value;
 	}
 
-	// Reads a positive integer (greater than 0) from the user.
+	// Reads a positive integer from the user.
 	private static int readPositiveInt(Scanner scanner) {
 		if (!scanner.hasNextInt()) {
 			System.out.println("Error: Must be a whole number.");
