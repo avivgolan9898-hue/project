@@ -550,9 +550,9 @@ public class Main {
 		while (true) {
 			System.out.print("Enter street address (e.g. Herzl 10): ");
 			street = scanner.nextLine();
-			if (isNonEmpty(street))
+			if (isLettersDigitsAndSpaces(street))
 				break;
-			System.out.println("Error: Street address cannot be empty.");
+			System.out.println("Error: Street address must contain letters, digits and spaces only.");
 		}
 
 		// Zipcode - digits only, 5-7 digits
@@ -621,11 +621,11 @@ public class Main {
 		// Manager full name
 		String name;
 		while (true) {
-			System.out.print("Enter manager full name: ");
+			System.out.print("Enter manager full name (letters and spaces only): ");
 			name = scanner.nextLine();
-			if (isNonEmpty(name))
+			if (isLettersAndSpaces(name))
 				break;
-			System.out.println("Error: Name cannot be empty.");
+			System.out.println("Error: Name must contain letters only.");
 		}
 
 		// Username - must be unique
@@ -757,9 +757,9 @@ public class Main {
 		while (true) {
 			System.out.print("Enter kitchen type (e.g. Italian, Asian): ");
 			kitchenType = scanner.nextLine();
-			if (isNonEmpty(kitchenType))
+			if (isLettersAndSpaces(kitchenType))
 				break;
-			System.out.println("Error: Kitchen type cannot be empty.");
+			System.out.println("Error: Kitchen type must contain letters only.");
 		}
 
 		// Rating 0.0-5.0
@@ -907,11 +907,11 @@ public class Main {
 		// Full name
 		String fullName;
 		while (true) {
-			System.out.print("Enter full name: ");
+			System.out.print("Enter full name (letters and spaces only): ");
 			fullName = scanner.nextLine();
-			if (isNonEmpty(fullName))
+			if (isLettersAndSpaces(fullName))
 				break;
-			System.out.println("Error: Name cannot be empty.");
+			System.out.println("Error: Name must contain letters only.");
 		}
 
 		// Phone
@@ -929,9 +929,9 @@ public class Main {
 		while (true) {
 			System.out.print("Enter vehicle type (e.g. Bicycle, Scooter, Car): ");
 			vehicle = scanner.nextLine();
-			if (isNonEmpty(vehicle))
+			if (isLettersAndSpaces(vehicle))
 				break;
-			System.out.println("Error: Vehicle type cannot be empty.");
+			System.out.println("Error: Vehicle type must contain letters only.");
 		}
 
 		Rider newRider = new Rider(id, fullName, phone, vehicle, true);
@@ -1711,6 +1711,18 @@ public class Main {
 			return false;
 		for (int i = 0; i < s.length(); i++) {
 			if (!Character.isDigit(s.charAt(i)))
+				return false;
+		}
+		return true;
+	}
+
+	// Checks that the string contains letters, digits and spaces only
+	private static boolean isLettersDigitsAndSpaces(String s) {
+		if (!isNonEmpty(s))
+			return false;
+		for (int i = 0; i < s.length(); i++) {
+			char c = s.charAt(i);
+			if (!Character.isLetterOrDigit(c) && c != ' ')
 				return false;
 		}
 		return true;
