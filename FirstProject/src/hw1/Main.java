@@ -597,7 +597,9 @@ public class Main {
 			}
 			creditBalance = scanner.nextDouble();
 			scanner.nextLine();
-			if (creditBalance < 0) {
+			if (Double.isNaN(creditBalance) || Double.isInfinite(creditBalance)) {
+				System.out.println("Error: Value must be a valid number.");
+			} else if (creditBalance < 0) {
 				System.out.println("Error: Credit balance cannot be negative.");
 			} else {
 				break;
@@ -773,7 +775,9 @@ public class Main {
 			}
 			rating = scanner.nextDouble();
 			scanner.nextLine();
-			if (rating < 0 || rating > 5) {
+			if (Double.isNaN(rating) || Double.isInfinite(rating)) {
+				System.out.println("Error: Value must be a valid number.");
+			} else if (rating < 0 || rating > 5) {
 				System.out.println("Error: Rating must be between 0.0 and 5.0.");
 			} else {
 				break;
@@ -807,7 +811,9 @@ public class Main {
 			}
 			deliveryFee = scanner.nextDouble();
 			scanner.nextLine();
-			if (deliveryFee < 0) {
+			if (Double.isNaN(deliveryFee) || Double.isInfinite(deliveryFee)) {
+				System.out.println("Error: Value must be a valid number.");
+			} else if (deliveryFee < 0) {
 				System.out.println("Error: Delivery fee cannot be negative.");
 			} else {
 				break;
@@ -834,7 +840,9 @@ public class Main {
 				}
 				fastExtra = scanner.nextDouble();
 				scanner.nextLine();
-				if (fastExtra < 0) {
+				if (Double.isNaN(fastExtra) || Double.isInfinite(fastExtra)) {
+					System.out.println("Error: Value must be a valid number.");
+				} else if (fastExtra < 0) {
 					System.out.println("Error: Extra cost cannot be negative.");
 				} else {
 					break;
@@ -856,7 +864,9 @@ public class Main {
 				}
 				minCost = scanner.nextDouble();
 				scanner.nextLine();
-				if (minCost < 0) {
+				if (Double.isNaN(minCost) || Double.isInfinite(minCost)) {
+					System.out.println("Error: Value must be a valid number.");
+				} else if (minCost < 0) {
 					System.out.println("Error: Minimum cost cannot be negative.");
 				} else {
 					break;
@@ -874,7 +884,9 @@ public class Main {
 				}
 				commission = scanner.nextDouble();
 				scanner.nextLine();
-				if (commission < 0) {
+				if (Double.isNaN(commission) || Double.isInfinite(commission)) {
+					System.out.println("Error: Value must be a valid number.");
+				} else if (commission < 0) {
 					System.out.println("Error: Commission cannot be negative.");
 				} else {
 					break;
@@ -1045,6 +1057,10 @@ public class Main {
 			}
 			baseAmount = scanner.nextDouble();
 			scanner.nextLine();
+			if (Double.isNaN(baseAmount) || Double.isInfinite(baseAmount)) {
+				System.out.println("Error: Value must be a valid number.");
+				continue;
+			}
 			if (baseAmount <= 0) {
 				System.out.println("Error: Amount must be positive.");
 				continue;
@@ -1154,6 +1170,10 @@ public class Main {
 			}
 			baseAmount = scanner.nextDouble();
 			scanner.nextLine();
+			if (Double.isNaN(baseAmount) || Double.isInfinite(baseAmount)) {
+				System.out.println("Error: Value must be a valid number.");
+				continue;
+			}
 			if (baseAmount <= 0) {
 				System.out.println("Error: Amount must be positive.");
 				continue;
@@ -1334,8 +1354,12 @@ public class Main {
 				.print("Enter new street address (press Enter to keep current: " + customer.getStreetAddress() + "): ");
 		String newStreet = scanner.nextLine();
 		if (isNonEmpty(newStreet)) {
-			customer.setStreetAddress(newStreet);
-			System.out.println("Street address updated successfully.");
+			if (!isLettersDigitsAndSpaces(newStreet)) {
+				System.out.println("Error: Street address must contain letters, digits and spaces only.");
+			} else {
+				customer.setStreetAddress(newStreet);
+				System.out.println("Street address updated successfully.");
+			}
 		}
 
 		// Phone - loop until valid or left empty (Enter to keep current)
@@ -1401,7 +1425,9 @@ public class Main {
 			}
 			amount = scanner.nextDouble();
 			scanner.nextLine();
-			if (amount <= 0) {
+			if (Double.isNaN(amount) || Double.isInfinite(amount)) {
+				System.out.println("Error: Value must be a valid number.");
+			} else if (amount <= 0) {
 				System.out.println("Error: Amount must be positive.");
 			} else {
 				break;
@@ -1425,7 +1451,9 @@ public class Main {
 			}
 			amount = scanner.nextDouble();
 			scanner.nextLine();
-			if (amount <= 0) {
+			if (Double.isNaN(amount) || Double.isInfinite(amount)) {
+				System.out.println("Error: Value must be a valid number.");
+			} else if (amount <= 0) {
 				System.out.println("Error: Amount must be positive.");
 			} else if (amount > customer.getCreditBalance()) {
 				System.out.println("Error: Insufficient balance. Current balance: " + customer.getCreditBalance());
@@ -1566,9 +1594,9 @@ public class Main {
 		while (true) {
 			System.out.print("Enter kitchen type (e.g. Italian, Asian): ");
 			kitchenType = scanner.nextLine();
-			if (isNonEmpty(kitchenType))
+			if (isLettersAndSpaces(kitchenType))
 				break;
-			System.out.println("Error: Kitchen type cannot be empty.");
+			System.out.println("Error: Kitchen type must contain letters only.");
 		}
 
 		ArrayList<Restaurant> result = system.getOpenRestaurantsByKitchenType(kitchenType);
@@ -1731,6 +1759,8 @@ public class Main {
 	// Checks that the string is digits only AND fits in a valid int (no overflow)
 	private static boolean isValidCustomerCode(String s) {
 		if (!isDigitsOnly(s))
+			return false;
+		if (s.length() > 1 && s.charAt(0) == '0')
 			return false;
 		try {
 			Integer.parseInt(s);
