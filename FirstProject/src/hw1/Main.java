@@ -501,13 +501,13 @@ public class Main {
 	private static void addCustomer(Scanner scanner, DeliveryDataBase system) {
 		System.out.println("Add Customer");
 
-		// Customer code - loop until valid and unique
+		// Customer code - loop until valid (digits only) and unique
 		String code;
 		while (true) {
 			System.out.print("Enter customer code (number only, e.g. 11): ");
 			code = scanner.nextLine();
-			if (!isNonEmpty(code)) {
-				System.out.println("Error: Customer code cannot be empty.");
+			if (!isDigitsOnly(code)) {
+				System.out.println("Error: Customer code must contain digits only.");
 			} else if (system.findCustomerById(code) != null) {
 				System.out.println("Error: A customer with this code already exists.");
 			} else {
@@ -525,7 +525,7 @@ public class Main {
 			System.out.println("Error: First name must contain letters only, no digits or special characters.");
 		}
 
-		// Last name - letters and spaces allowed 
+		// Last name - letters and spaces allowed
 		String lastName;
 		while (true) {
 			System.out.print("Enter last name (letters only, spaces allowed): ");
@@ -1286,7 +1286,7 @@ public class Main {
 		}
 	}
 
-	// Prints the active order of the rider 
+	// Prints the active order of the rider
 	private static void printRiderActiveOrder(DeliveryDataBase system, Rider rider) {
 		System.out.println("Active Order for Rider: " + rider.getFullName());
 		ArrayList<Order> activeOrders = system.getActiveOrdersByRider(rider.getId());
@@ -1312,7 +1312,7 @@ public class Main {
 		}
 	}
 
-	// Prints all orders placed by the given customer 
+	// Prints all orders placed by the given customer
 	private static void printCustomerOrders(DeliveryDataBase system, Customer customer) {
 		System.out.println(" Orders for: " + customer.getFirstName() + " " + customer.getLastName() + " ");
 		int customerCodeInt = Integer.parseInt(customer.getCustomerCode());
@@ -1450,7 +1450,7 @@ public class Main {
 		}
 	}
 
-	// Displays the customer with the most orders 
+	// Displays the customer with the most orders
 	private static void showMostActiveCustomer(DeliveryDataBase system) {
 		Customer top = system.getMostActiveCustomer();
 		if (top == null) {
@@ -1460,7 +1460,7 @@ public class Main {
 		}
 	}
 
-	// Displays the rider with the most deliveries 
+	// Displays the rider with the most deliveries
 	private static void showMostActiveRider(DeliveryDataBase system) {
 		Rider top = system.getMostActiveRider();
 		if (top == null) {
@@ -1470,7 +1470,7 @@ public class Main {
 		}
 	}
 
-	// Opens or closes a restaurant 
+	// Opens or closes a restaurant
 	private static void updateRestaurantStatus(Scanner scanner, DeliveryDataBase system) {
 		System.out.println("Update Restaurant Status");
 
@@ -1703,6 +1703,17 @@ public class Main {
 			return -1;
 		}
 		return value;
+	}
+
+	// Checks that the string contains digits only (no letters or special chars)
+	private static boolean isDigitsOnly(String s) {
+		if (!isNonEmpty(s))
+			return false;
+		for (int i = 0; i < s.length(); i++) {
+			if (!Character.isDigit(s.charAt(i)))
+				return false;
+		}
+		return true;
 	}
 
 	// Reads a positive integer from the user.
