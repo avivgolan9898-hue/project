@@ -506,8 +506,8 @@ public class Main {
 		while (true) {
 			System.out.print("Enter customer code (number only, e.g. 11): ");
 			code = scanner.nextLine();
-			if (!isDigitsOnly(code)) {
-				System.out.println("Error: Customer code must contain digits only.");
+			if (!isValidCustomerCode(code)) {
+				System.out.println("Error: Customer code must contain digits only and be a valid integer.");
 			} else if (system.findCustomerById(code) != null) {
 				System.out.println("Error: A customer with this code already exists.");
 			} else {
@@ -1714,6 +1714,18 @@ public class Main {
 				return false;
 		}
 		return true;
+	}
+
+	// Checks that the string is digits only AND fits in a valid int (no overflow)
+	private static boolean isValidCustomerCode(String s) {
+		if (!isDigitsOnly(s))
+			return false;
+		try {
+			Integer.parseInt(s);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
 	}
 
 	// Reads a positive integer from the user.
